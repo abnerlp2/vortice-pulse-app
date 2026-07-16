@@ -1,50 +1,44 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Vórtice Pulse Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Library-First
+Toda funcionalidad debe comenzar como una biblioteca independiente y autónoma. La lógica crítica de negocio —como el cálculo de promedios de votación, la generación segura de firmas efímeras de dispositivos (`device_signature`) y la evaluación de las ventanas de tiempo de 10 minutos— se diseñará en forma de clases puras de PHP. Esto garantiza que el núcleo de la aplicación permanezca desacoplado de las dependencias directas de la capa de presentación del framework.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. CLI Interface
+Toda biblioteca debe exponer su funcionalidad principal a través de una interfaz de línea de comandos. El conjunto completo de servicios del sistema se estructurará para interactuar a través de comandos Artisan personalizados de Laravel. Se garantizará la existencia de comandos específicos para vaciar caché, forzar el estado de Redis y simular cargas masivas de estrés (hasta 300 usuarios concurrentes enviando evaluaciones de manera simultánea) antes de acoplar el frontend.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Test-First (NON-NEGOTIABLE)
+Se exige de forma estricta un ciclo de desarrollo guiado por pruebas. Queda prohibido escribir código de producción sin contar previamente con una prueba automatizada escrita en PEST PHP que falle. El ciclo de desarrollo Red-Green-Refactor gobernará la construcción de cada controlador, clase de servicio y componente reactivo.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Integration-First Testing
+Priorizar el comportamiento del sistema en entornos reales. Se dará preferencia a la suite de pruebas de integración que validen de manera integral la persistencia en la base de datos de la entidad `evaluations` y el comportamiento reactivo en tiempo real de los componentes Livewire v4, evitando el uso excesivo de dobles de prueba (mocks).
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Simplicity Over Cleverness
+Evitar funcionalidades especulativas y abstracciones complejas. La simplicidad del código de producción tiene prioridad absoluta sobre la generalización innecesaria. Se prohíbe el diseño de patrones arquitectónicos pensados para prever futuros frameworks o motores alternativos de persistencia. El desarrollo se acoplará de forma natural a las características estándar de Laravel 11 y Livewire v4 para mantener el contexto del agente de IA predecible y eficiente.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technical Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Architecture Stack Requirements
+*   **Backend framework**: Laravel 11 (PHP 8.3) con tipado estricto a nivel de métodos, propiedades y retornos.
+*   **Reactividad y frontend**: Livewire v4 y Alpine.js para un dinamismo ágil.
+*   **Estilos visuales**: Tailwind CSS optimizado de manera estricta para resoluciones de dispositivos móviles.
+*   **Tiempo real**: Laravel Reverb integrado para la sincronización reactiva de métricas agregadas hacia el dashboard público.
+*   **Caché e infraestructura**: Redis para mitigar lecturas masivas y gestionar la cola de la base de datos MySQL frente a la concurrencia de accesos.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Code Documentation Policy (Zero AI Noise)
+Queda estrictamente prohibido incluir comentarios explicativos, justificaciones contextuales o diarios de desarrollo generados por el agente de IA dentro de los archivos de código fuente de producción (`.php`, `.blade.php`, etc.). El código expresará su propósito mediante un nombrado semántico estructurado. Toda la documentación conceptual de negocio e ingeniería residirá exclusivamente en archivos Markdown dentro del repositorio para preservar su valor académico.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+### Frictionless and Mobile-First Gates
+*   **Optimización móvil**: El diseño del frontend se optimizará con un enfoque estricto Mobile-First en orientación vertical (Portrait).
+*   **Áreas interactivas**: Todos los elementos táctiles interactivos (corazones de calificación, campos de formulario y botones de envío) contarán con un área interactiva de acción mínima de **44x44** píxeles para evitar toques accidentales con el pulgar.
+*   **Sin autenticación**: Se prohíbe el uso de sistemas tradicionales de inicio de sesión o recopilación de datos personales para los asistentes del evento. La validación de unicidad de voto se resolverá de forma transparente mediante la firma segura del dispositivo.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+*   La especificación (`spec.md`) constituye la única verdad funcional del proyecto. Ninguna tarea o línea de código se generará si no cuenta con un criterio de aceptación respaldado por la especificación.
+*   Cualquier excepción de complejidad o cambio sobre la arquitectura del stack deberá estar explícitamente documentada en el registro de la especificación técnica correspondiente.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-07-16
