@@ -1,0 +1,153 @@
+<?php
+
+use App\Models\Talk;
+use App\Models\TimeBlock;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use Tests\TestCase;
+
+uses(TestCase::class, RefreshDatabase::class);
+
+beforeEach(function () {
+    // Preparar datos base para que el componente tenga un Talk válido que evaluar
+    $this->timeBlock = TimeBlock::create([
+        'id' => 'block-active',
+        'start_time' => now()->subMinutes(10),
+        'end_time' => now()->addMinutes(30),
+    ]);
+
+    $this->talk = Talk::create([
+        'id' => 'talk-active',
+        'title' => 'TDD en el Mundo Real',
+        'speaker' => 'Juan Pérez',
+        'time_block_id' => $this->timeBlock->id,
+        'start_time' => now()->subMinutes(5),
+        'end_time' => now()->addMinutes(25),
+    ]);
+});
+
+it('renders the mobile evaluator component successfully', function () {
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->assertStatus(200);
+});
+
+it('persists a valid evaluation with a device signature', function () {
+    $signature = hash('sha256', 'mock-device-uuid-1');
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 5)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('evaluations', [
+        'talk_id' => $this->talk->id,
+        'rating' => 5,
+        'device_signature' => $signature,
+    ]);
+});
+
+it('persists a valid evaluation with qualitative aspects', function () {
+    $signature = hash('sha256', 'mock-device-uuid-qualitative');
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 5)
+        ->set('deviceSignature', $signature)
+        ->set('likedAspects', 'Excelente contenido')
+        ->set('improvementAspects', 'Más tiempo para Q&A')
+        ->call('submitEvaluation')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('evaluations', [
+        'talk_id' => $this->talk->id,
+        'rating' => 5,
+        'device_signature' => $signature,
+        'liked_aspects' => 'Excelente contenido',
+        'improvement_aspects' => 'Más tiempo para Q&A',
+    ]);
+});
+
+it('rejects evaluation submission if device signature is missing', function () {
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 4)
+        ->set('deviceSignature', null)
+        ->call('submitEvaluation')
+        ->assertHasErrors(['deviceSignature']);
+
+    $this->assertDatabaseEmpty('evaluations');
+});
+
+it('prevents duplicate votes for the same talk using the same device signature', function () {
+    $signature = hash('sha256', 'mock-device-uuid-2');
+
+    // Emitimos el primer voto válido
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 4)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation')
+        ->assertHasNoErrors();
+
+    // Intentamos emitir un segundo voto para la MISMA charla con la MISMA firma
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 5)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation')
+        // Esperamos que falle la validación de unicidad o salte un error controlado
+        ->assertHasErrors(['deviceSignature']);
+
+    // Afirmamos en base de datos que solo se registró un voto (el primero)
+    $this->assertDatabaseCount('evaluations', 1);
+    $this->assertDatabaseHas('evaluations', [
+        'talk_id' => $this->talk->id,
+        'rating' => 4, // Asegura que el primer rating es el que quedó guardado
+        'device_signature' => $signature,
+    ]);
+});
+
+it('rejects an evaluation if submitted before the talk time block starts', function () {
+    // Viajamos en el tiempo a 1 minuto antes de que inicie el bloque de tiempo de la charla
+    $this->travelTo($this->timeBlock->start_time->copy()->subMinute());
+
+    $signature = hash('sha256', 'mock-device-early');
+
+    // Esperamos que el servicio arroje la excepción subyacente
+    $this->expectException(\App\Core\Evaluation\Exceptions\OutOfTimeBlockException::class);
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 5)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation');
+});
+
+it('rejects an evaluation if submitted more than 30 minutes after the talk time block ends', function () {
+    // Viajamos en el tiempo a 31 minutos después de que finalice el bloque de tiempo
+    $this->travelTo($this->timeBlock->end_time->copy()->addMinutes(31));
+
+    $signature = hash('sha256', 'mock-device-late');
+
+    $this->expectException(\App\Core\Evaluation\Exceptions\OutOfTimeBlockException::class);
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 3)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation');
+});
+
+it('accepts an evaluation submitted exactly during the talk time block or within the 30 min tolerance', function () {
+    // Viajamos exactamente a 15 minutos después de finalizado el bloque (dentro de la tolerancia)
+    $this->travelTo($this->timeBlock->end_time->copy()->addMinutes(15));
+
+    $signature = hash('sha256', 'mock-device-on-time');
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->set('rating', 4)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('evaluations', [
+        'talk_id' => $this->talk->id,
+        'rating' => 4,
+        'device_signature' => $signature,
+    ]);
+});
