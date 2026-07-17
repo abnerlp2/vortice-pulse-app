@@ -94,6 +94,15 @@ class EvaluationService
 
         // Invalidar caché tras registrar exitosamente el voto
         $cacheHelper->delete("vortice:pulse:talk:{$talkId}");
+
+        $statistics = $this->getTalkStatistics($talkId);
+        event(new \App\Core\Evaluation\Events\EvaluationReceived(
+            $talkId,
+            $talk->time_block_id,
+            $statistics['average'],
+            $statistics['total_votes'],
+            $rating,
+        ));
     }
 
     /**

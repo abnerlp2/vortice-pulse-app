@@ -55,6 +55,15 @@ class EloquentEvaluationRepository implements EvaluationRepositoryInterface
             ->toArray();
     }
 
+    public function getTalksByTimeBlock(string $timeBlockId): array
+    {
+        return DB::table('talks')
+            ->where('time_block_id', $timeBlockId)
+            ->orderBy('title')
+            ->pluck('id')
+            ->toArray();
+    }
+
     public function hasEvaluation(string $talkId, string $deviceSignature): bool
     {
         return DB::table('evaluations')

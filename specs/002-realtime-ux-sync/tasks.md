@@ -79,6 +79,15 @@
 - [x] T0020 Implementar en `SimulateOfflineSync.php` la simulación transaccional concurrente de vaciado de colas para 300 terminales móviles de forma secuencial, evaluando tiempos de respuesta del backend
 - [x] T0021 [P] Ejecutar la suite general de validación cruzada mediante el comando de la CLI de control del repositorio para garantizar convergencia limpia antes del cierre de la rama
 
+## Phase 6: Convergence
+
+**Propósito**: Detectar las brechas reales entre la implementación actual y los criterios de aceptación del spec, y colocar tareas de remediación trazables.
+
+- [x] T0022 Implementar el manejo de eventos en `app/Http/Livewire/AdminDashboard.php` y `resources/views/livewire/admin-dashboard.blade.php` para actualizar dinámicamente las métricas del dashboard en respuesta a `EvaluationReceived` y activar el banner de alerta al recibir `RankingOrderAltered`.
+- [x] T0023 Extender `app/Core/Evaluation/Services/RankReconciliationService.php` para validar el campo `created_at` de los payloads offline frente a la ventana de expiración del bloque horario y descartar las evaluaciones tardías inválidas antes de persistir.
+- [x] T0024 Añadir el estado de bloque inactivo y el congelamiento de actualizaciones en `app/Http/Livewire/AdminDashboard.php` y la vista del dashboard para los bloques de tiempo finalizados, según la aceptación de la historia de usuario 1.
+- [x] T0025 Crear una prueba de componente adicional en `tests/Feature/AdminDashboardComponentTest.php` que verifique la propagación de eventos reales hacia el estado del dashboard y la activación del banner de alertas de ranking.
+
 ---
 
 ## Dependencies & Execution Order

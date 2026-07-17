@@ -1,8 +1,15 @@
 <div 
     x-data="evaluatorDevice()" 
-    x-init="initSignature()" 
+    x-init="initSignature(); loadQueue(); listenNetwork()" 
+    @retry-offline-sync.window="retryPendingEvaluations()"
     class="flex flex-col items-center justify-center min-h-[50vh] p-4 bg-gray-50 rounded-xl shadow-sm max-w-sm mx-auto"
 >
+    <template x-if="hasOfflinePending">
+        <div class="mb-4 w-full">
+            @include('livewire.components.offline-status-indicator')
+        </div>
+    </template>
+
     <!-- Estado: Voto emitido -->
     <div x-show="$wire.hasSubmitted" x-cloak class="text-center p-6 space-y-4">
         <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
@@ -58,11 +65,12 @@
         <div class="pt-4">
             <button 
                 type="button" 
-                wire:click="submitEvaluation"
+                @click="submitEvaluation()"
                 class="w-full h-14 bg-red-600 hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center text-lg touch-manipulation"
                 wire:loading.attr="disabled"
+                :disabled="isSubmitting"
             >
-                <span wire:loading.remove>Enviar Valoración</span>
+                <span wire:loading.remove x-text="isSubmitting ? 'Enviando...' : 'Enviar Valoración'"></span>
                 <span wire:loading>Enviando...</span>
             </button>
         </div>
@@ -72,28 +80,127 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('evaluatorDevice', () => ({
-            async initSignature() {
-                // If signature already entangled and present, exit early.
-                if (this.$wire.deviceSignature) return;
+            pendingQueue: [],
+            hasOfflinePending: false,
+            isSubmitting: false,
 
-                // Simple ephemeral UUID stored in local storage
+            get queueKey() {
+                return 'vortice:evaluator:pending';
+            },
+
+            initSignature() {
+                if (this.$wire.deviceSignature) {
+                    return;
+                }
+
                 let uuid = localStorage.getItem('vortice_device_uuid');
                 if (!uuid) {
                     uuid = crypto.randomUUID ? crypto.randomUUID() : 'uuid-' + Date.now() + '-' + Math.random();
                     localStorage.setItem('vortice_device_uuid', uuid);
                 }
 
-                // Append userAgent for additional entropy
                 const rawString = uuid + '-' + navigator.userAgent;
-                
-                // Generate SHA-256 hash
-                const msgBuffer = new TextEncoder().encode(rawString);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                const encoder = new TextEncoder();
+                const data = encoder.encode(rawString);
 
-                // Entangle with Livewire
-                this.$wire.set('deviceSignature', hashHex);
+                crypto.subtle.digest('SHA-256', data).then((hashBuffer) => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+                    this.$wire.set('deviceSignature', hashHex);
+                });
+            },
+
+            loadQueue() {
+                const stored = localStorage.getItem(this.queueKey);
+                this.pendingQueue = stored ? JSON.parse(stored) : [];
+                this.hasOfflinePending = this.pendingQueue.length > 0;
+            },
+
+            saveQueue() {
+                localStorage.setItem(this.queueKey, JSON.stringify(this.pendingQueue));
+                this.hasOfflinePending = this.pendingQueue.length > 0;
+            },
+
+            listenNetwork() {
+                window.addEventListener('online', () => {
+                    if (this.pendingQueue.length > 0) {
+                        this.processQueue();
+                    }
+                });
+            },
+
+            submitEvaluation() {
+                if (!this.$wire.rating || !this.$wire.deviceSignature) {
+                    return;
+                }
+
+                if (!navigator.onLine) {
+                    this.storeOffline();
+                    return;
+                }
+
+                this.isSubmitting = true;
+
+                this.$wire.call('submitEvaluation')
+                    .then(() => {
+                        this.isSubmitting = false;
+                        this.hasOfflinePending = false;
+                    })
+                    .catch(() => {
+                        this.isSubmitting = false;
+                        this.storeOffline();
+                    });
+            },
+
+            storeOffline() {
+                const pendingItem = {
+                    talk_id: this.$wire.talkId,
+                    rating: this.$wire.rating,
+                    device_signature: this.$wire.deviceSignature,
+                    liked_aspects: this.$wire.likedAspects,
+                    improvement_aspects: this.$wire.improvementAspects,
+                    created_at: new Date().toISOString(),
+                };
+
+                this.pendingQueue.push(pendingItem);
+                this.saveQueue();
+                this.hasOfflinePending = true;
+            },
+
+            retryPendingEvaluations() {
+                if (!navigator.onLine || this.pendingQueue.length === 0) {
+                    return;
+                }
+
+                this.processQueue();
+            },
+
+            processQueue() {
+                if (this.pendingQueue.length === 0) {
+                    this.hasOfflinePending = false;
+                    return;
+                }
+
+                const evaluation = this.pendingQueue.shift();
+                this.saveQueue();
+
+                this.$wire.set('rating', evaluation.rating);
+                this.$wire.set('deviceSignature', evaluation.device_signature);
+                this.$wire.set('likedAspects', evaluation.liked_aspects);
+                this.$wire.set('improvementAspects', evaluation.improvement_aspects);
+
+                this.$wire.call('submitEvaluation')
+                    .then(() => {
+                        if (this.pendingQueue.length > 0) {
+                            this.processQueue();
+                        } else {
+                            this.hasOfflinePending = false;
+                        }
+                    })
+                    .catch(() => {
+                        this.pendingQueue.unshift(evaluation);
+                        this.saveQueue();
+                    });
             }
         }));
     });

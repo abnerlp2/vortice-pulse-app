@@ -52,6 +52,14 @@ interface EvaluationRepositoryInterface
     public function getTalkRatings(string $talkId): array;
 
     /**
+     * Retrieves the talk IDs that belong to a specific time block.
+     *
+     * @param string $timeBlockId
+     * @return array<int, string>
+     */
+    public function getTalksByTimeBlock(string $timeBlockId): array;
+
+    /**
      * Checks if an evaluation exists for a given talk and device signature.
      *
      * @param string $talkId

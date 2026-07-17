@@ -32,6 +32,30 @@ it('renders the admin dashboard component successfully', function () {
         ->assertSee('Promedio Actual');
 });
 
+it('applies live event updates and displays a ranking alert banner', function () {
+    $component = Livewire::test('admin-dashboard');
+
+    $component->call('onEvaluationReceived', [
+        'talk_id' => $this->talk->id,
+        'time_block_id' => $this->timeBlock->id,
+        'average' => 4.7,
+        'total_votes' => 12,
+    ])
+    ->assertSet("talkStats.{$this->talk->id}.average", 4.7)
+    ->assertSet("talkStats.{$this->talk->id}.total_votes", 12);
+
+    $component->call('onRankingOrderAltered', [
+        'message' => 'Orden alterado por sincronización offline.',
+        'after_order' => [$this->talk->id],
+        'affected_talks' => [$this->talk->id],
+    ])
+    ->assertSet('hasOfflineAlert', true)
+    ->assertSet('offlineAlert.message', 'Orden alterado por sincronización offline.')
+    ->assertSee('Alerta: ranking alterado por datos offline tardíos')
+    ->assertSee('Orden alterado por sincronización offline.')
+    ->assertSee($this->talk->id);
+});
+
 it('shows the offline ranking alert banner when the dashboard receives an alert', function () {
     Livewire::test('admin-dashboard')
         ->set('hasOfflineAlert', true)
