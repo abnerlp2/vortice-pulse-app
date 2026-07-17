@@ -8,36 +8,36 @@
 
 ## Summary
 
-[cite_start]Establecer la infraestructura de persistencia, comandos y componentes en tiempo real para Vórtice Pulse[cite: 1, 9]. [cite_start]El enfoque técnico consiste en un comando Artisan de Laravel optimizado para deserializar y validar el archivo de configuración JSON [cite: 56, 171, 179][cite_start], un modelo relacional respaldado por MySQL para las charlas y evaluaciones [cite: 59, 169][cite_start], y un componente móvil interactivo Livewire v4 potenciado con Alpine.js para gestionar la interfaz táctil[cite: 55, 57]. [cite_start]El control de ventanas temporales de votación y la prevención de colisiones por firmas de dispositivo se optimizarán mediante almacenamiento persistente y caché rápida en Redis[cite: 60, 177, 194].
+Establecer la infraestructura de persistencia, comandos y componentes en tiempo real para Vórtice Pulse. El enfoque técnico consiste en un comando Artisan de Laravel optimizado para deserializar y validar el archivo de configuración JSON, un modelo relacional respaldado por MySQL para las charlas y evaluaciones, y un componente móvil interactivo Livewire v4 potenciado con Alpine.js para gestionar la interfaz táctil. El control de ventanas temporales de votación y la prevención de colisiones por firmas de dispositivo se optimizarán mediante almacenamiento persistente y caché rápida en Redis.
 
 ## Technical Context
 
-[cite_start]**Language/Version**: PHP 8.3 / Laravel 11 [cite: 56]
+**Language/Version**: PHP 8.3 / Laravel 11
 
-[cite_start]**Primary Dependencies**: Livewire v4, Alpine.js, Tailwind CSS, Laravel Reverb, Predis [cite: 55, 57, 58, 60]
+**Primary Dependencies**: Livewire v4, Alpine.js, Tailwind CSS, Laravel Reverb, Predis
 
-[cite_start]**Storage**: MySQL 8.0 (Persistencia transaccional) [cite: 59][cite_start], Redis 7.2 (Caché rápida de firmas de dispositivo y control de ventanas de tiempo) [cite: 60, 177, 194]
+**Storage**: MySQL 8.0 (Persistencia transaccional), Redis 7.2 (Caché rápida de firmas de dispositivo y control de ventanas de tiempo)
 
-[cite_start]**Testing**: PEST PHP (Pruebas unitarias, de integración y de componentes Livewire) [cite: 62]
+**Testing**: PEST PHP (Pruebas unitarias, de integración y de componentes Livewire)
 
-[cite_start]**Target Platform**: Mobile-first Web Application (Optimizado para Safari iOS y Chrome Android en orientación vertical) [cite: 28, 29]
+**Target Platform**: Mobile-first Web Application (Optimizado para Safari iOS y Chrome Android en orientación vertical)
 
-[cite_start]**Project Type**: web-service / mobile-app [cite: 54]
+**Project Type**: web-service / mobile-app
 
-[cite_start]**Performance Goals**: Latencia de registro de evaluación <100ms, soporte de ráfagas concurrentes de hasta 300 peticiones por segundo en el cierre de bloques horários[cite: 26, 162].
+**Performance Goals**: Latencia de registro de evaluación <100ms, soporte de ráfagas concurrentes de hasta 300 peticiones por segundo en el cierre de bloques horários.
 
-[cite_start]**Constraints**: <150ms p95 para procesamiento de WebSocket a través de Laravel Reverb [cite: 58][cite_start], cero almacenamiento de datos personales (PII) bajo cumplimiento estricto de anonimato[cite: 22, 142].
+**Constraints**: <150ms p95 para procesamiento de WebSocket a través de Laravel Reverb, cero almacenamiento de datos personales (PII) bajo cumplimiento estricto de anonimato.
 
-[cite_start]**Scale/Scope**: 1 evento principal, ~20 charlas, ~1000 asistentes activos concurrentes evaluando de manera simultánea[cite: 19, 26, 162].
+**Scale/Scope**: 1 evento principal, ~20 charlas, ~1000 asistentes activos concurrentes evaluando de manera simultánea.
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-* [cite_start]**Library-First Principle**: La lógica de negocio principal para la gestión de evaluaciones e importación se encapsulará en un Service class desacoplado (Core/Evaluation/Services) antes de exponerse en controladores, componentes de Livewire o comandos de consola[cite: 74, 81, 165].
-* [cite_start]**CLI Interface Mandate**: Toda la inicialización y administración de la agenda del evento es exclusivamente operable a través del comando Artisan pulse:import-agenda[cite: 157, 421].
-* [cite_start]**Test-First Imperative**: Se generará la estructura de pruebas en PEST validando el service de importación y el registro de firmas efímeras antes de escribir la lógica del componente Livewire o del front-end[cite: 62, 67].
-* [cite_start]**Zero AI Noise**: Queda prohibida la introducción de cualquier comentario explicativo o redundante de IA dentro del código PHP o Javascript generado[cite: 71].
+* **Library-First Principle**: La lógica de negocio principal para la gestión de evaluaciones e importación se encapsulará en un Service class desacoplado (Core/Evaluation/Services) antes de exponerse en controladores, componentes de Livewire o comandos de consola.
+* **CLI Interface Mandate**: Toda la inicialización y administración de la agenda del evento es exclusivamente operable a través del comando Artisan pulse:import-agenda.
+* **Test-First Imperative**: Se generará la estructura de pruebas en PEST validando el service de importación y el registro de firmas efímeras antes de escribir la lógica del componente Livewire o del front-end.
+* **Zero AI Noise**: Queda prohibida la introducción de cualquier comentario explicativo o redundante de IA dentro del código PHP o Javascript generado.
 
 ## Project Structure
 
@@ -95,7 +95,7 @@ tests/
     └── EvaluationServiceTest.php
 [FIN_DIAGRAMA_ARBOL]
 
-[cite_start]**Structure Decision**: Se ha seleccionado la estructura estándar de monolito Laravel 11 adaptando un directorio de dominio aislado (app/Core/Evaluation) para encapsular las reglas de negocio, aislando así la capa de transporte (Consola/Livewire) de la lógica pura del servicio de evaluación[cite: 56, 115, 130].
+**Structure Decision**: Se ha seleccionado la estructura estándar de monolito Laravel 11 adaptando un directorio de dominio aislado (app/Core/Evaluation) para encapsular las reglas de negocio, aislando así la capa de transporte (Consola/Livewire) de la lógica pura del servicio de evaluación.
 
 ## Complexity Tracking
 

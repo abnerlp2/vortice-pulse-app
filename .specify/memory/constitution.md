@@ -41,4 +41,9 @@ Queda estrictamente prohibido incluir comentarios explicativos, justificaciones 
 *   La especificación (`spec.md`) constituye la única verdad funcional del proyecto. Ninguna tarea o línea de código se generará si no cuenta con un criterio de aceptación respaldado por la especificación.
 *   Cualquier excepción de complejidad o cambio sobre la arquitectura del stack deberá estar explícitamente documentada en el registro de la especificación técnica correspondiente.
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-07-16
+## Amendments
+
+*   **2026-07-16**: Queda estrictamente prohibido introducir lógica condicional o valores estáticos hardcodeados en los archivos de producción de la aplicación (app/) con el único propósito de satisfacer un entorno de testing. Los datos de prueba deben ser inyectados dinámicamente y de forma realista por el propio framework de pruebas (en las clases *Test.php) antes de la ejecución del flujo a probar.
+*   **2026-07-16**: El flujo de desarrollo debe respetar la separación de responsabilidades. Los prompts de interacción diaria con el agente de VS Code no deben instruir de forma explícita qué sintaxis usar, qué archivos crear, o qué dependencias inyectar de manera manual si esta información ya reside en plan.md o tasks.md. El agente debe derivar siempre su comportamiento leyendo autónomamente el espacio de trabajo local para evitar la sobreespecificación y la degradación de la calidad del plan.
+
+**Version**: 1.1.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-07-16
