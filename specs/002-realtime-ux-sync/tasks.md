@@ -98,3 +98,6 @@
 3. **Phase 3 (US2 - Offline)**: Puede ejecutarse de forma independiente en el cliente móvil una vez montada la lógica del Core del repositorio.
 4. **Phase 4 (US3 - Alertas)**: Depende estrictamente de la lógica de reconciliación de Phase 3, ya que consume los datos resultantes del vaciado de colas tardías.
 5. **Phase 5 (CLI & Polish)**: Bloqueada hasta completar la lógica de servicio de todas las historias anteriores para poder ejecutar simulaciones realistas.
+
+## Impedimentos de Infraestructura
+- [ ] [BLOQUEO] La validación visual (UAT) del canal de WebSockets no puede completarse en el entorno de GitHub Codespaces debido a la ausencia de la extensión nativa de PHP `pcntl` (Error: Undefined constant "SIGINT").

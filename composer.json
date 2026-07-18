@@ -2,7 +2,8 @@
     "name": "vortice/pulse-app",
     "description": "Vortice Pulse Application",
     "require": {
-        "laravel/framework": "^11.0"
+        "laravel/framework": "^11.0",
+        "laravel/reverb": "^1.10"
     },
     "require-dev": {
         "pestphp/pest": "^2.0"
