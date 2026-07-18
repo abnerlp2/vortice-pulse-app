@@ -74,7 +74,7 @@
 </div>
 
 <script>
-    document.addEventListener('livewire:load', function () {
+    document.addEventListener('livewire:initialized', function () {
         if (!window.Echo || typeof window.Echo.channel !== 'function') {
             return;
         }

@@ -59,3 +59,42 @@ it('creates a ranking alert when offline sync changes the top positions of the t
 
     expect(DB::table('ranking_alerts')->count())->toBeGreaterThan(0);
 });
+
+it('excludes duplicate offline evaluations using Redis cache idempotency checks', function () {
+    $service = new RankReconciliationService(app(EvaluationRepository::class), app(RedisCacheHelper::class));
+    $signature = hash('sha256', 'duplicate-sig-1');
+    
+    // Simulate first insertion
+    $service->reconcile($this->timeBlock->id, [
+        ['talk_id' => $this->talkA->id, 'rating' => 5, 'device_signature' => $signature, 'liked_aspects' => null, 'improvement_aspects' => null, 'created_at' => now()->toDateTimeString()],
+    ]);
+    
+    $countAfterFirst = DB::table('evaluations')->where('device_signature', $signature)->count();
+    expect($countAfterFirst)->toBe(1);
+    
+    // Set redis cache key manually to simulate idempotency check (which we will implement in T0029)
+    Redis::setex("vortice:pulse:eval:{$this->talkA->id}:{$signature}", 3600, 1);
+    
+    // Simulate duplicate payload
+    $service->reconcile($this->timeBlock->id, [
+        ['talk_id' => $this->talkA->id, 'rating' => 5, 'device_signature' => $signature, 'liked_aspects' => null, 'improvement_aspects' => null, 'created_at' => now()->toDateTimeString()],
+    ]);
+    
+    $countAfterSecond = DB::table('evaluations')->where('device_signature', $signature)->count();
+    expect($countAfterSecond)->toBe(1);
+});
+
+it('rejects offline evaluations that exceed the 10-minute expiration window', function () {
+    $service = new RankReconciliationService(app(EvaluationRepository::class), app(RedisCacheHelper::class));
+    
+    // Create an expired payload (11 minutes after the block's end_time)
+    $expiredTime = Carbon\Carbon::parse($this->timeBlock->end_time)->addMinutes(11);
+    $signature = hash('sha256', 'expired-sig-1');
+    
+    $service->reconcile($this->timeBlock->id, [
+        ['talk_id' => $this->talkB->id, 'rating' => 4, 'device_signature' => $signature, 'liked_aspects' => null, 'improvement_aspects' => null, 'created_at' => $expiredTime->toDateTimeString()],
+    ]);
+    
+    $count = DB::table('evaluations')->where('device_signature', $signature)->count();
+    expect($count)->toBe(0);
+});

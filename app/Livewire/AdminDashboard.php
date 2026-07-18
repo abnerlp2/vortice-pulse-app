@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Models\Talk;
 use Livewire\Component;
@@ -37,7 +37,7 @@ class AdminDashboard extends Component
 
     public function render()
     {
-        return view('livewire.admin-dashboard');
+        return view('livewire.admin-dashboard')->layout('components.layouts.app');
     }
 
     public function onEvaluationReceived(array $payload): void

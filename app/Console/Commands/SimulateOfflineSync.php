@@ -43,9 +43,11 @@ class SimulateOfflineSync extends Command
             ];
         }
 
+        $startTime = microtime(true);
         app(RankReconciliationService::class)->reconcile($timeBlockId, $pendingEvaluations);
+        $duration = (microtime(true) - $startTime) * 1000;
 
-        $this->info('Offline sync simulation completed.');
+        $this->info(sprintf('Offline sync simulation completed. Processed %d evaluations in %.2f ms.', $batch, $duration));
 
         return 0;
     }

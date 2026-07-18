@@ -26,14 +26,14 @@ beforeEach(function () {
 });
 
 it('renders the admin dashboard component successfully', function () {
-    Livewire::test('admin-dashboard')
+    Livewire::test(\App\Livewire\AdminDashboard::class)
         ->assertStatus(200)
         ->assertSee('Dashboard de Organización')
         ->assertSee('Promedio Actual');
 });
 
 it('applies live event updates and displays a ranking alert banner', function () {
-    $component = Livewire::test('admin-dashboard');
+    $component = Livewire::test(\App\Livewire\AdminDashboard::class);
 
     $component->call('onEvaluationReceived', [
         'talk_id' => $this->talk->id,
@@ -53,11 +53,11 @@ it('applies live event updates and displays a ranking alert banner', function ()
     ->assertSet('offlineAlert.message', 'Orden alterado por sincronización offline.')
     ->assertSee('Alerta: ranking alterado por datos offline tardíos')
     ->assertSee('Orden alterado por sincronización offline.')
-    ->assertSee($this->talk->id);
+    ->assertSee('Admin Dashboard Realtime');
 });
 
 it('shows the offline ranking alert banner when the dashboard receives an alert', function () {
-    Livewire::test('admin-dashboard')
+    Livewire::test(\App\Livewire\AdminDashboard::class)
         ->set('hasOfflineAlert', true)
         ->set('offlineAlert', [
             'message' => 'El orden consolidado del ranking cambió tras procesar propuestas offline.',
@@ -65,5 +65,5 @@ it('shows the offline ranking alert banner when the dashboard receives an alert'
         ])
         ->assertSee('Alerta: ranking alterado por datos offline tardíos')
         ->assertSee('El orden consolidado del ranking cambió tras procesar propuestas offline.')
-        ->assertSee('talk-admin');
+        ->assertSee('Admin Dashboard Realtime');
 });

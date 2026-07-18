@@ -75,7 +75,9 @@ class RankReconciliationService
                 continue;
             }
 
-            if (!$this->repository->hasEvaluation($evaluation['talk_id'], $evaluation['device_signature'])) {
+            $cacheKey = "vortice:pulse:eval:{$evaluation['talk_id']}:{$evaluation['device_signature']}";
+
+            if (!$this->cacheHelper->get($cacheKey) && !$this->repository->hasEvaluation($evaluation['talk_id'], $evaluation['device_signature'])) {
                 $this->repository->saveEvaluation([
                     'talk_id' => $evaluation['talk_id'],
                     'rating' => $evaluation['rating'],
@@ -83,6 +85,7 @@ class RankReconciliationService
                     'liked_aspects' => $evaluation['liked_aspects'] ?? null,
                     'improvement_aspects' => $evaluation['improvement_aspects'] ?? null,
                 ]);
+                $this->cacheHelper->set($cacheKey, '1', 3600);
                 $this->cacheHelper->delete("vortice:pulse:talk:{$evaluation['talk_id']}");
             }
         }
@@ -101,7 +104,7 @@ class RankReconciliationService
         }
 
         $startTime = Carbon::parse($timeBlock->start_time);
-        $expirationTime = Carbon::parse($timeBlock->end_time)->addMinutes(30);
+        $expirationTime = Carbon::parse($timeBlock->end_time)->addMinutes(10);
 
         return $createdAt->between($startTime, $expirationTime);
     }

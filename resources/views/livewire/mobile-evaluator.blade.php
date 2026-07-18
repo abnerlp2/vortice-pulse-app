@@ -4,7 +4,7 @@
     @retry-offline-sync.window="retryPendingEvaluations()"
     class="flex flex-col items-center justify-center min-h-[50vh] p-4 bg-gray-50 rounded-xl shadow-sm max-w-sm mx-auto"
 >
-    <template x-if="hasOfflinePending">
+    <template x-if="$store.vorticeCache.hasOfflinePending">
         <div class="mb-4 w-full">
             @include('livewire.components.offline-status-indicator')
         </div>
@@ -79,14 +79,39 @@
 
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data('evaluatorDevice', () => ({
+        Alpine.store('vorticeCache', {
             pendingQueue: [],
             hasOfflinePending: false,
-            isSubmitting: false,
-
+            
             get queueKey() {
                 return 'vortice:evaluator:pending';
             },
+            
+            loadQueue() {
+                const stored = localStorage.getItem(this.queueKey);
+                this.pendingQueue = stored ? JSON.parse(stored) : [];
+                this.hasOfflinePending = this.pendingQueue.length > 0;
+            },
+            
+            saveQueue() {
+                localStorage.setItem(this.queueKey, JSON.stringify(this.pendingQueue));
+                this.hasOfflinePending = this.pendingQueue.length > 0;
+            },
+            
+            add(item) {
+                this.pendingQueue.push(item);
+                this.saveQueue();
+            },
+            
+            shift() {
+                const item = this.pendingQueue.shift();
+                this.saveQueue();
+                return item;
+            }
+        });
+
+        Alpine.data('evaluatorDevice', () => ({
+            isSubmitting: false,
 
             initSignature() {
                 if (this.$wire.deviceSignature) {
@@ -111,19 +136,12 @@
             },
 
             loadQueue() {
-                const stored = localStorage.getItem(this.queueKey);
-                this.pendingQueue = stored ? JSON.parse(stored) : [];
-                this.hasOfflinePending = this.pendingQueue.length > 0;
-            },
-
-            saveQueue() {
-                localStorage.setItem(this.queueKey, JSON.stringify(this.pendingQueue));
-                this.hasOfflinePending = this.pendingQueue.length > 0;
+                this.$store.vorticeCache.loadQueue();
             },
 
             listenNetwork() {
                 window.addEventListener('online', () => {
-                    if (this.pendingQueue.length > 0) {
+                    if (this.$store.vorticeCache.pendingQueue.length > 0) {
                         this.processQueue();
                     }
                 });
@@ -144,7 +162,6 @@
                 this.$wire.call('submitEvaluation')
                     .then(() => {
                         this.isSubmitting = false;
-                        this.hasOfflinePending = false;
                     })
                     .catch(() => {
                         this.isSubmitting = false;
@@ -162,13 +179,11 @@
                     created_at: new Date().toISOString(),
                 };
 
-                this.pendingQueue.push(pendingItem);
-                this.saveQueue();
-                this.hasOfflinePending = true;
+                this.$store.vorticeCache.add(pendingItem);
             },
 
             retryPendingEvaluations() {
-                if (!navigator.onLine || this.pendingQueue.length === 0) {
+                if (!navigator.onLine || this.$store.vorticeCache.pendingQueue.length === 0) {
                     return;
                 }
 
@@ -176,13 +191,11 @@
             },
 
             processQueue() {
-                if (this.pendingQueue.length === 0) {
-                    this.hasOfflinePending = false;
+                if (this.$store.vorticeCache.pendingQueue.length === 0) {
                     return;
                 }
 
-                const evaluation = this.pendingQueue.shift();
-                this.saveQueue();
+                const evaluation = this.$store.vorticeCache.shift();
 
                 this.$wire.set('rating', evaluation.rating);
                 this.$wire.set('deviceSignature', evaluation.device_signature);
@@ -191,15 +204,13 @@
 
                 this.$wire.call('submitEvaluation')
                     .then(() => {
-                        if (this.pendingQueue.length > 0) {
+                        if (this.$store.vorticeCache.pendingQueue.length > 0) {
                             this.processQueue();
-                        } else {
-                            this.hasOfflinePending = false;
                         }
                     })
                     .catch(() => {
-                        this.pendingQueue.unshift(evaluation);
-                        this.saveQueue();
+                        this.$store.vorticeCache.pendingQueue.unshift(evaluation);
+                        this.$store.vorticeCache.saveQueue();
                     });
             }
         }));
