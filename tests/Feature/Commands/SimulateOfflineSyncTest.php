@@ -17,7 +17,7 @@ beforeEach(function () {
     ]);
 
     $this->talk = Talk::create([
-        'id' => 'talk-offline',
+        'id' => 'talk-active',
         'title' => 'Offline Sync Demo',
         'speaker' => 'Andrés Nuñez',
         'time_block_id' => $this->timeBlock->id,

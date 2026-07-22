@@ -3,16 +3,18 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(TestCase::class, RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->validPayloadPath = storage_path('app/valid_agenda.json');
-    $this->invalidPayloadPath = storage_path('app/invalid_agenda.json');
+    Storage::fake('local');
+    $this->validPayloadPath = Storage::path('valid_agenda.json');
+    $this->invalidPayloadPath = Storage::path('invalid_agenda.json');
 
-    File::put($this->validPayloadPath, json_encode([
+    Storage::put('valid_agenda.json', json_encode([
         'time_blocks' => [
             ['id' => 'block-1', 'start_time' => '2026-07-16T09:00:00Z', 'end_time' => '2026-07-16T10:00:00Z'],
         ],
@@ -21,7 +23,7 @@ beforeEach(function () {
         ],
     ]));
 
-    File::put($this->invalidPayloadPath, json_encode([
+    Storage::put('invalid_agenda.json', json_encode([
         'time_blocks' => [
             ['id' => 'block-2', 'start_time' => '2026-07-16T10:00:00Z', 'end_time' => '2026-07-16T11:00:00Z'],
         ],
@@ -33,8 +35,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    File::delete($this->validPayloadPath);
-    File::delete($this->invalidPayloadPath);
+    // Storage::fake() cleans itself up, but we can keep these if we want. We'll just leave it empty.
 });
 
 it('imports agenda successfully and returns 0', function () {

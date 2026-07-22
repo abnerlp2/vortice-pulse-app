@@ -27,12 +27,12 @@ it('has evaluations table with the correct schema and constraints', function () 
     }
     
     // Assert composite unique index exists to prevent duplicate votes
-    $indexes = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes('evaluations');
+    $indexes = Schema::getIndexes('evaluations');
     
     $hasCompositeUnique = collect($indexes)->contains(function ($index) {
-        return $index->isUnique() && 
-               in_array('talk_id', $index->getColumns()) && 
-               in_array('device_signature', $index->getColumns());
+        return $index['unique'] === true && 
+               in_array('talk_id', $index['columns']) && 
+               in_array('device_signature', $index['columns']);
     });
     
     expect($hasCompositeUnique)->toBeTrue('The evaluations table is missing the unique composite index for talk_id and device_signature.');

@@ -31,10 +31,17 @@ class SimulateOfflineSync extends Command
 
         $this->info("Simulating offline sync for time block {$timeBlockId} with batch size {$batch}...");
 
+        $talkIds = \App\Models\Talk::where('time_block_id', $timeBlockId)->pluck('id')->toArray();
+
+        if (empty($talkIds)) {
+            $this->error("No talks found for time block {$timeBlockId}. Cannot simulate offline sync.");
+            return 1;
+        }
+
         $pendingEvaluations = [];
         for ($i = 0; $i < $batch; $i++) {
             $pendingEvaluations[] = [
-                'talk_id' => 'talk-active',
+                'talk_id' => $talkIds[array_rand($talkIds)],
                 'rating' => random_int(1, 5),
                 'device_signature' => hash('sha256', Str::uuid()->toString() . $i),
                 'liked_aspects' => null,

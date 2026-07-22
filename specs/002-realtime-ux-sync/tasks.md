@@ -144,8 +144,19 @@
 
 **Purpose**: Sincronizar el repositorio concreto de evaluaciones con los métodos abstractos exigidos por su interfaz para restablecer la estabilidad del contenedor IoC y permitir la ejecución del simulador de estrés.
 
-- [ ] T044 Desmarcar temporalmente la tarea T020 en tasks.md hasta que el contrato de compilación sea completamente válido.
-- [ ] T045 Implementar el método `getTalkRatings($talkId)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` para calcular promedios de corazones.
-- [ ] T046 Implementar el método `getTalksByTimeBlock($timeBlockId)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` para recuperar las ponencias agendadas.
-- [ ] T047 Implementar el método `hasEvaluation($talkId, $deviceSignature)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` utilizando Redis/MySQL para el control de fraude de una opinión por persona.
-- [ ] T048 Ejecutar la suite de pruebas unitarias mediante `./vendor/bin/sail pest` para verificar que el contenedor IoC resuelva todas las dependencias sin excepciones.
+- [x] T044 Desmarcar temporalmente la tarea T020 en tasks.md hasta que el contrato de compilación sea completamente válido.
+- [x] T045 Implementar el método `getTalkRatings($talkId)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` para calcular promedios de corazones.
+- [x] T046 Implementar el método `getTalksByTimeBlock($timeBlockId)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` para recuperar las ponencias agendadas.
+- [x] T047 Implementar el método `hasEvaluation($talkId, $deviceSignature)` en `app/Core/Evaluation/Repositories/EvaluationRepository.php` utilizando Redis/MySQL para el control de fraude de una opinión por persona.
+- [x] T048 Ejecutar la suite de pruebas unitarias mediante `./vendor/bin/sail pest` para verificar que el contenedor IoC resuelva todas las dependencias sin excepciones.
+- [x] T049 Corregir el fallo de importación en `app/Core/Evaluation/Events/EvaluationReceived.php` añadiendo `use Illuminate\Contracts\Broadcasting\ShouldBroadcast;` en la cabecera para restaurar el contrato de WebSockets.
+- [x] T050 Refactorizar la prueba `tests/Feature/Commands/SimulateOfflineSyncTest.php` asegurando la creación del modelo padre (`Talk`) antes de inyectar evaluaciones para respetar las restricciones de llave foránea.
+- [x] T051 Aislar o mockear el disco de almacenamiento en `tests/Feature/Evaluation/ImportAgendaTest.php` utilizando `Storage::fake()` para evitar el error de `file_put_contents` por ausencia del directorio local.
+
+## Phase 11: Real-time Connectivity & UI Fixes
+
+- [x] T052 Modificar `app/Livewire/AdminDashboard.php` para que el método `mount()` consulte la base de datos y cargue el estado real (`$talks`, `$talkStats`, `$podiumOrder`), eliminando el estado vacío que dispara el "Preview Estático".
+- [x] T053 Configurar el entorno local: asegurar que `.env` tenga `BROADCAST_CONNECTION=reverb` y `QUEUE_CONNECTION=database`. Verificar que las variables `VITE_REVERB_HOST=localhost` y `VITE_REVERB_PORT=8080` estén correctas.
+- [x] T054 Crear y ejecutar la migración de colas mediante `php artisan make:queue-table` y `php artisan migrate` para garantizar que los eventos en segundo plano tengan donde almacenarse.
+- [x] T055 Asegurar que el puerto `8080` esté expuesto en el servicio `laravel.test` dentro del archivo `docker-compose.yml` para permitir el tráfico de WebSockets desde el navegador.
+- [x] T056 [US3] Refactorizar SimulateOfflineSync.php para consultar charlas válidas de la base de datos según el bloque horario activo y reemplazar el string hardcoded "talk-active" en las inserciones, resolviendo la violación de integridad relacional (Error 1452).
