@@ -49,6 +49,30 @@ class EvaluationRepository implements EvaluationRepositoryInterface
         return DB::table('talks')->where('id', $id)->first();
     }
 
+    public function getTalkRatings(string $talkId): array
+    {
+        return DB::table('evaluations')
+            ->where('talk_id', $talkId)
+            ->pluck('rating')
+            ->toArray();
+    }
+
+    public function getTalksByTimeBlock(string $timeBlockId): array
+    {
+        return DB::table('talks')
+            ->where('time_block_id', $timeBlockId)
+            ->pluck('id')
+            ->toArray();
+    }
+
+    public function hasEvaluation(string $talkId, string $deviceSignature): bool
+    {
+        return DB::table('evaluations')
+            ->where('talk_id', $talkId)
+            ->where('device_signature', $deviceSignature)
+            ->exists();
+    }
+
     public function saveEvaluation(array $data): bool
     {
         $evaluation = new Evaluation($data);

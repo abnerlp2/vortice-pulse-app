@@ -28,7 +28,7 @@ beforeEach(function () {
 it('renders the mobile evaluator with offline storage UI hooks and pending indicator template', function () {
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
         ->assertStatus(200)
-        ->assertSee('x-data="evaluatorDevice()"')
+        ->assertSee('x-data="evaluatorDevice()"', false)
         ->assertSee('Envío pendiente por conexión')
         ->assertSee('Reintentar sincronización offline');
 });

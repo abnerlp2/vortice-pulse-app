@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Core\Evaluation\Contracts\EvaluationRepositoryInterface;
 use App\Models\Talk;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class AdminDashboard extends Component
@@ -16,12 +18,21 @@ class AdminDashboard extends Component
     public bool $isBlockActive = true;
     public string $blockStatus = 'En vivo';
 
-    public function mount()
+    public function mount(EvaluationRepositoryInterface $repository)
     {
         $talks = Talk::with('timeBlock')->get();
 
-        $this->talks = $talks->map(function (Talk $talk) {
+        $this->talks = $talks->map(function (Talk $talk) use ($repository) {
             $this->talkTitles[$talk->id] = $talk->title;
+
+            $ratings = $repository->getTalkRatings($talk->id);
+            $totalVotes = count($ratings);
+            $average = $totalVotes > 0 ? array_sum($ratings) / $totalVotes : 0;
+            
+            $this->talkStats[$talk->id] = [
+                'average' => round($average, 1),
+                'total_votes' => $totalVotes,
+            ];
 
             return [
                 'id' => $talk->id,
@@ -29,8 +40,13 @@ class AdminDashboard extends Component
                 'speaker' => $talk->speaker,
                 'time_block_id' => $talk->time_block_id,
                 'end_time' => $talk->timeBlock?->end_time,
+                'average' => $average,
             ];
         })->toArray();
+        
+        // Sort to get podium order
+        $sortedTalks = collect($this->talks)->sortByDesc('average')->values();
+        $this->podiumOrder = $sortedTalks->pluck('id')->toArray();
 
         $this->evaluateBlockStatus();
     }
@@ -40,6 +56,7 @@ class AdminDashboard extends Component
         return view('livewire.admin-dashboard')->layout('components.layouts.app');
     }
 
+    #[On('echo:modules.dashboard,.evaluation.received')]
     public function onEvaluationReceived(array $payload): void
     {
         if (!$this->isBlockActive && isset($payload['time_block_id'])) {
@@ -52,6 +69,7 @@ class AdminDashboard extends Component
         ];
     }
 
+    #[On('echo:modules.dashboard,.ranking.order.altered')]
     public function onRankingOrderAltered(array $payload): void
     {
         $this->hasOfflineAlert = true;

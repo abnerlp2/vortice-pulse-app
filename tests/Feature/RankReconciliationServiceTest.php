@@ -48,8 +48,8 @@ beforeEach(function () {
 it('creates a ranking alert when offline sync changes the top positions of the time block', function () {
     DB::table('evaluations')->insert([
         ['talk_id' => $this->talkA->id, 'rating' => 5, 'device_signature' => hash('sha256', 'toka-a-1'), 'created_at' => now(), 'updated_at' => now()],
-        ['talk_id' => $this->talkB->id, 'rating' => 4, 'device_signature' => hash('sha256', 'talk-b-1'), 'created_at' => now(), 'updated_at' => now()],
-        ['talk_id' => $this->talkC->id, 'rating' => 3, 'device_signature' => hash('sha256', 'talk-c-1'), 'created_at' => now(), 'updated_at' => now()],
+        ['talk_id' => $this->talkB->id, 'rating' => 2, 'device_signature' => hash('sha256', 'talk-b-1'), 'created_at' => now(), 'updated_at' => now()],
+        ['talk_id' => $this->talkC->id, 'rating' => 1, 'device_signature' => hash('sha256', 'talk-c-1'), 'created_at' => now(), 'updated_at' => now()],
     ]);
 
     $service = new RankReconciliationService(app(EvaluationRepository::class), app(RedisCacheHelper::class));

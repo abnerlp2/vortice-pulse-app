@@ -13,7 +13,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(EvaluationRepositoryInterface::class, EloquentEvaluationRepository::class);
+        $this->app->bind(EvaluationRepositoryInterface::class, \App\Core\Evaluation\Repositories\EvaluationRepository::class);
     }
 
     /**
