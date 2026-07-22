@@ -1,7 +1,6 @@
 <?php
 
 use App\Core\Evaluation\Services\EvaluationService;
-use InvalidArgumentException;
 
 it('parses a valid JSON payload into agenda data', function (): void {
     $service = new EvaluationService();
