@@ -104,33 +104,18 @@ it('prevents duplicate votes for the same talk using the same device signature',
     ]);
 });
 
-it('rejects an evaluation if submitted before the talk time block starts', function () {
-    // Viajamos en el tiempo a 1 minuto antes de que inicie el bloque de tiempo de la charla
+it('redirects to landing if accessed before the talk starts', function () {
     $this->travelTo($this->timeBlock->start_time->copy()->subMinute());
 
-    $signature = hash('sha256', 'mock-device-early');
-
-    // Esperamos que el servicio arroje la excepción subyacente
-    $this->expectException(\App\Core\Evaluation\Exceptions\OutOfTimeBlockException::class);
-
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
-        ->set('rating', 5)
-        ->set('deviceSignature', $signature)
-        ->call('submitEvaluation');
+        ->assertRedirect(route('landing'));
 });
 
-it('rejects an evaluation if submitted more than 30 minutes after the talk time block ends', function () {
-    // Viajamos en el tiempo a 31 minutos después de que finalice el bloque de tiempo
+it('redirects to landing if accessed more than 30 minutes after the talk ends', function () {
     $this->travelTo($this->timeBlock->end_time->copy()->addMinutes(31));
 
-    $signature = hash('sha256', 'mock-device-late');
-
-    $this->expectException(\App\Core\Evaluation\Exceptions\OutOfTimeBlockException::class);
-
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
-        ->set('rating', 3)
-        ->set('deviceSignature', $signature)
-        ->call('submitEvaluation');
+        ->assertRedirect(route('landing'));
 });
 
 it('accepts an evaluation submitted exactly during the talk time block or within the 30 min tolerance', function () {

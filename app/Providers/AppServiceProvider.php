@@ -15,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
             \App\Core\Evaluation\Contracts\EvaluationRepositoryInterface::class,
             \App\Core\Evaluation\Repositories\EvaluationRepository::class
         );
+
+        $this->app->bind(
+            \App\Core\Event\Contracts\QrGeneratorInterface::class,
+            \App\Core\Event\Services\QrGeneratorService::class
+        );
     }
 
     /**
