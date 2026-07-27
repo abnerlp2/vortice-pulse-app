@@ -25,3 +25,5 @@
 
 ##  : Convergence & QA
 - [x] T014 Validar flujos de red: ejecutar `./vendor/bin/sail npm run build` y correr las suites de PEST unificadas.
+- [x] T015 [UAT Fix] Corregir BindingResolutionException en MobileEvaluator alineando el parámetro '$talk' del método mount con la firma de la ruta.
+- [x] T016 [UAT Fix] Crear/corregir el layout principal de Livewire (components/layouts/app.blade.php) para resolver el InvalidArgumentException en componentes Full-Page.

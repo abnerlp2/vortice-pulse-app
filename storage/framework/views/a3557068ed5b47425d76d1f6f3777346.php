@@ -48,4 +48,4 @@
         </div>
     </div>
 </header>
-<?php /**PATH /Users/abner.trejos/Developer/vortice-pulse-app/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/navigation.blade.php ENDPATH**/ ?>
+<?php /**PATH /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/navigation.blade.php ENDPATH**/ ?>

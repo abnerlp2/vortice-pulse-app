@@ -16,21 +16,21 @@ class MobileEvaluator extends Component
     
     public bool $hasSubmitted = false;
 
-    public function mount(string $talkId)
+    public function mount(string $talk)
     {
-        $this->talkId = $talkId;
+        $this->talkId = $talk;
         
-        $talk = \App\Models\Talk::with('timeBlock')->find($talkId);
+        $talkModel = \App\Models\Talk::with('timeBlock')->find($talk);
         
-        if (!$talk) {
+        if (!$talkModel) {
             return redirect()->route('landing')->with('error', 'La charla solicitada no existe.');
         }
 
         $now = now();
-        $startTime = $talk->timeBlock->start_time;
-        $endTimeWithTolerance = $talk->timeBlock->end_time->copy()->addMinutes(30);
+        $startTime = $talkModel->timeBlock->start_time;
+        $endTimeWithTolerance = $talkModel->timeBlock->end_time->copy()->addMinutes(30);
 
-        if ($talk->timeBlock && ($now->lt($startTime) || $now->gt($endTimeWithTolerance))) {
+        if ($talkModel->timeBlock && ($now->lt($startTime) || $now->gt($endTimeWithTolerance))) {
             return redirect()->route('landing')->with('warning', 'Esta charla ya no está activa o aún no ha comenzado.');
         }
     }
@@ -61,6 +61,6 @@ class MobileEvaluator extends Component
 
     public function render()
     {
-        return view('livewire.mobile-evaluator');
+        return view('livewire.mobile-evaluator')->layout('components.layouts.app');
     }
 }

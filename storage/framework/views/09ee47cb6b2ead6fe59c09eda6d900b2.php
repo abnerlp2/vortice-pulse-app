@@ -50,4 +50,4 @@
 <?php $component = $__componentOriginal74daf2d0a9c625ad90327a6043d15980; ?>
 <?php unset($__componentOriginal74daf2d0a9c625ad90327a6043d15980); ?>
 <?php endif; ?>
-<?php /**PATH /Users/abner.trejos/Developer/vortice-pulse-app/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/header.blade.php ENDPATH**/ ?>
+<?php /**PATH /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/header.blade.php ENDPATH**/ ?>

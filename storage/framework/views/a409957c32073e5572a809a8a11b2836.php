@@ -201,4 +201,4 @@
         </button>
     </div>
 </div>
-<?php /**PATH /Users/abner.trejos/Developer/vortice-pulse-app/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/theme-switcher.blade.php ENDPATH**/ ?>
+<?php /**PATH /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Providers/../resources/exceptions/renderer/components/theme-switcher.blade.php ENDPATH**/ ?>
