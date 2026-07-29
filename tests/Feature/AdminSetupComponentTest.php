@@ -44,3 +44,15 @@ test('admin cannot upload invalid file extensions', function () {
         ->call('import')
         ->assertHasErrors(['file']);
 });
+
+test('renders the admin setup page at /admin/setup route when authenticated', function () {
+    $this->withSession(['admin_authenticated' => true]);
+
+    $response = $this->get('/admin/setup');
+
+    $response->assertStatus(200);
+    $response->assertSee('Configuración Inicial de Agenda');
+    $response->assertSee('Volver al Dashboard');
+    $response->assertSee(route('dashboard'));
+    $response->assertSee('vortice-logo.svg');
+});

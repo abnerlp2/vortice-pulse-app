@@ -16,6 +16,9 @@ class PublicLeaderboardComponentTest extends TestCase
     {
         $response = $this->get('/public');
         $response->assertStatus(200);
+        $response->assertSee('vortice-logo.svg');
+        $response->assertSee('bg-white/95');
+        $response->assertDontSee('VORTICE PULSE');
     }
 
     public function test_it_updates_stats_when_evaluation_is_received()

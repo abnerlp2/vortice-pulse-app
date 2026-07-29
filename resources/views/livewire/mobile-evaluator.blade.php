@@ -2,11 +2,14 @@
     x-data="evaluatorDevice()" 
     x-init="initSignature(); loadQueue(); listenNetwork()" 
     @retry-offline-sync.window="retryPendingEvaluations()"
-    class="flex flex-col items-center justify-center min-h-[50vh] p-4 bg-gray-50 rounded-xl shadow-sm max-w-sm mx-auto"
+    class="max-w-md mx-auto min-h-screen bg-gray-50 shadow-sm flex flex-col items-center justify-start w-full"
 >
-    <x-header />
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm py-3 px-4 flex justify-center items-center">
+        <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-8 w-auto">
+    </header>
 
-    <template x-if="$store.vorticeCache.hasOfflinePending">
+    <div class="p-4 w-full flex-grow flex flex-col items-center justify-start">
+        <template x-if="$store.vorticeCache.hasOfflinePending">
         <div class="mb-4 w-full">
             @include('livewire.components.offline-status-indicator')
         </div>
@@ -19,17 +22,28 @@
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform scale-90"
         x-transition:enter-end="opacity-100 transform scale-100"
-        class="text-center p-6 space-y-4"
+        class="text-center p-6 space-y-4 w-full my-auto"
     >
         <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
             <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         </div>
         <h3 class="text-xl font-semibold text-gray-800">¡Gracias por tu evaluación!</h3>
         <p class="text-gray-500">Tu respuesta ha sido registrada exitosamente.</p>
+        <div class="pt-4">
+            <a href="/" class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl transition-colors shadow-md text-base">
+                ← Volver a la Agenda
+            </a>
+        </div>
     </div>
 
     <!-- Estado: Formulario Activo -->
-    <div x-show="!$wire.hasSubmitted" x-transition.opacity.duration.300ms class="w-full space-y-8">
+    <div x-show="!$wire.hasSubmitted" x-transition.opacity.duration.300ms class="w-full space-y-6">
+        <div class="flex justify-start px-2">
+            <a href="/" class="inline-flex items-center min-h-[44px] min-w-[44px] text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                ← Volver a la Agenda
+            </a>
+        </div>
+
         <div class="text-center">
             <h2 class="text-2xl font-bold text-gray-800">¿Qué te pareció esta charla?</h2>
             <p class="text-gray-500 mt-2 text-sm">Toca un corazón para calificar</p>
@@ -66,12 +80,12 @@
         <div class="space-y-4 px-4 text-left mt-6">
             <div>
                 <label class="block text-sm font-medium text-gray-700">¿Qué fue lo que más te gustó? (Opcional)</label>
-                <textarea wire:model="likedAspects" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"></textarea>
+                <textarea wire:model="likedAspects" rows="2" class="mt-1 block w-full bg-white text-gray-900 border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-2 focus:ring-red-500 text-sm focus:outline-none"></textarea>
                 @error('likedAspects') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">¿Qué mejorarías? (Opcional)</label>
-                <textarea wire:model="improvementAspects" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"></textarea>
+                <textarea wire:model="improvementAspects" rows="2" class="mt-1 block w-full bg-white text-gray-900 border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-2 focus:ring-red-500 text-sm focus:outline-none"></textarea>
                 @error('improvementAspects') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
         </div>

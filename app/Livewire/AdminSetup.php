@@ -57,6 +57,6 @@ class AdminSetup extends Component
 
     public function render()
     {
-        return view('livewire.admin-setup');
+        return view('livewire.admin-setup')->layout('components.layouts.app');
     }
 }

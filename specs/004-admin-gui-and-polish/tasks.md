@@ -59,3 +59,17 @@
 - [ ] T018 Refactorizar `app/Http/Livewire/AdminDashboard.php` (o crear un componente hijo) para inyectar los métodos de edición (`editTalk()`, `updateTalk()`), aplicando tipado estricto y reglas de validación en los campos `title`, `speakers` y `time_block_id`.
 - [ ] T019 Implementar la interfaz del formulario de edición dentro de `resources/views/livewire/admin-dashboard.blade.php` (dentro del Slide-over o un modal Desktop), asegurando manejo de errores y estados de carga (`wire:loading`).
 - [ ] T020 [P] Ejecutar la suite de pruebas completa de la Feature 004 para garantizar que la nueva funcionalidad de edición no generó regresiones en la importación masiva ni en el visor cualitativo.
+
+---
+
+## Phase 6: User Story 5 - Layout, Branding y Navegación Universal
+
+**Objective**: Unificar la cabecera móvil sticky, segregar plantillas (Desktop vs. Mobile), simplificar el header del admin, integrar branding público con alto contraste y garantizar botones de retorno en todas las vistas.
+
+- [x] T021 [P] [US5] Segregar las plantillas de renderizado: mantener el layout de escritorio de ancho completo para vistas administrativas (`/admin`, `/admin/setup`, `/public`) y reservar el marco móvil Portrait (`max-w-md mx-auto`) exclusivamente para las vistas del asistente (`/`, `/talk/*`).
+- [x] T022 [P] [US5] Implementar la cabecera fija unificada `<x-header>` en el layout móvil de asistentes como una barra blanca sticky de ancho completo con sombra (`sticky top-0 z-50 w-full bg-white shadow-sm border-b border-gray-100`), ubicando el logo centrado fuera del cuerpo de las tarjetas.
+- [x] T023 [P] [US5] Agregar la acción de retorno "← Volver a la Agenda" en `resources/views/livewire/mobile-evaluator.blade.php` **tanto en la pantalla de calificación activa (corazones) como en la tarjeta de agradecimiento/éxito final**.
+- [x] T024 [P] [US5] Simplificar la cabecera de `resources/views/livewire/admin-dashboard.blade.php`, removiendo el badge "DESKTOP" y descripciones extensas para limpiar el encabezado.
+- [x] T025 [P] [US5] Enmarcar el logotipo oficial de Vórtice 2026 dentro de un contenedor/badge claro (`bg-white/95 px-4 py-2 rounded-xl shadow-md inline-block`) en `resources/views/livewire/public-leaderboard.blade.php` para alto contraste sobre el fondo oscuro y eliminar títulos de texto duplicados.
+- [x] T026 [US5] Crear y ejecutar la suite de pruebas PEST en `tests/Feature/` para verificar la segregación de layouts, los botones de retorno en ambas pantallas móviles y la visibilidad del logo público.
+- [x] T027 [P] [US5] Estandarizar las clases de bordes redondeados Tailwind en todas las vistas Blade (`resources/views/`): aplicar `rounded-2xl` a tarjetas contenedoras y `rounded-xl` a botones e insumos de texto para homogeneizar el sistema de diseño.

@@ -212,8 +212,8 @@ class EvaluationService
 
             $timeBlocks[$id] = [
                 'id' => $id,
-                'start_time' => $startTime,
-                'end_time' => $endTime,
+                'start_time' => date('Y-m-d H:i:s', $startTimestamp),
+                'end_time' => date('Y-m-d H:i:s', $endTimestamp),
             ];
         }
 
@@ -257,8 +257,8 @@ class EvaluationService
                 'title' => $title,
                 'speaker' => $speaker,
                 'time_block_id' => $timeBlockId,
-                'start_time' => $startTime,
-                'end_time' => $endTime,
+                'start_time' => date('Y-m-d H:i:s', $startTimestamp),
+                'end_time' => date('Y-m-d H:i:s', $endTimestamp),
             ];
         }
 

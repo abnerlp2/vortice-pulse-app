@@ -16,10 +16,14 @@ class RedisCacheHelper
      */
     public function set(string $key, mixed $value, ?int $ttlSeconds = null): void
     {
-        if ($ttlSeconds !== null) {
-            Redis::setex($key, $ttlSeconds, $value);
-        } else {
-            Redis::set($key, $value);
+        try {
+            if ($ttlSeconds !== null) {
+                Redis::setex($key, $ttlSeconds, $value);
+            } else {
+                Redis::set($key, $value);
+            }
+        } catch (\Throwable $e) {
+            // Log or fallback gracefully if Redis service is unreachable
         }
     }
 
@@ -31,7 +35,11 @@ class RedisCacheHelper
      */
     public function get(string $key): mixed
     {
-        return Redis::get($key);
+        try {
+            return Redis::get($key);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 
     /**
@@ -42,7 +50,11 @@ class RedisCacheHelper
      */
     public function delete(string $key): int
     {
-        return Redis::del($key);
+        try {
+            return (int) Redis::del($key);
+        } catch (\Throwable $e) {
+            return 0;
+        }
     }
 
     /**
@@ -53,7 +65,11 @@ class RedisCacheHelper
      */
     public function increment(string $key): int
     {
-        return Redis::incr($key);
+        try {
+            return (int) Redis::incr($key);
+        } catch (\Throwable $e) {
+            return 0;
+        }
     }
 
     /**
@@ -64,6 +80,10 @@ class RedisCacheHelper
      */
     public function decrement(string $key): int
     {
-        return Redis::decr($key);
+        try {
+            return (int) Redis::decr($key);
+        } catch (\Throwable $e) {
+            return 0;
+        }
     }
 }

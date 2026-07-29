@@ -16,11 +16,14 @@ class MobileEvaluator extends Component
     
     public bool $hasSubmitted = false;
 
-    public function mount(string $talk)
+    public function mount(?string $talk = null)
     {
-        $this->talkId = $talk;
+        if ($talk) {
+            $this->talkId = $talk;
+        }
         
-        $talkModel = \App\Models\Talk::with('timeBlock')->find($talk);
+        $talkId = $this->talkId;
+        $talkModel = \App\Models\Talk::with('timeBlock')->find($talkId);
         
         if (!$talkModel) {
             return redirect()->route('landing')->with('error', 'La charla solicitada no existe.');

@@ -1,12 +1,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="{ open: @entangle('showSlideOver') }">
     <!-- Header Desktop -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-200">
-        <div>
-            <div class="flex items-center gap-3">
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard de Organización</h1>
-                <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Desktop</span>
-            </div>
-            <p class="text-slate-500 mt-1 text-base">Métricas en vivo, monitoreo de evaluaciones y alertas de ranking en tiempo real.</p>
+        <div class="flex items-center gap-4">
+            <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-10 w-auto">
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard de Organización</h1>
         </div>
         <div class="flex items-center gap-4">
             <a href="{{ route('admin.setup') }}" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-xl shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors">
@@ -55,7 +52,7 @@
                 @foreach($talks as $talk)
                     <div 
                         wire:click="loadQualitativeData('{{ $talk['id'] }}')"
-                        class="rounded-3xl bg-white p-5 shadow-sm border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer group"
+                        class="rounded-2xl bg-white p-5 shadow-sm border border-slate-200 hover:border-sky-300 hover:shadow-md transition-all cursor-pointer group"
                     >
                         <div class="flex items-start justify-between gap-2 mb-4">
                             <div>
@@ -81,7 +78,7 @@
 
         <!-- Panel Lateral Desktop: Podio / Resumen -->
         <div class="col-span-12 lg:col-span-4 space-y-6">
-            <div class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sticky top-6">
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sticky top-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-bold text-slate-800">Orden actual del Podio</h3>
                     <span class="flex h-2.5 w-2.5 relative">
@@ -157,7 +154,7 @@
                                     Feedback Cualitativo: {{ $talkTitles[$selectedTalkId] ?? '' }}
                                 </h2>
                                 <div class="ml-3 flex h-7 items-center">
-                                    <button @click="open = false" class="rounded-md bg-white text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                                    <button @click="open = false" class="rounded-xl bg-white text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
                                         <span class="sr-only">Cerrar panel</span>
                                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />

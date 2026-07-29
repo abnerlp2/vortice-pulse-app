@@ -14,4 +14,5 @@ it('renders the admin dashboard at the /admin route when authenticated', functio
 
     $response->assertStatus(200);
     $response->assertSee('Dashboard de Organización');
+    $response->assertSee('vortice-logo.svg');
 });

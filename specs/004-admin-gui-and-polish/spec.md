@@ -64,11 +64,18 @@ Como Organizador del evento, quiero editar los detalles de una charla específic
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
-*   **FR-019**: El sistema MUST proveer una interfaz gráfica de carga de archivos que soporte las extensiones `.xlsx` y `.csv`, reutilizando la lógica de persistencia del `EvaluationService` para parsear los datos de manera estructurada.
-*   **FR-020**: El sistema MUST proteger todas las rutas bajo el prefijo `/admin` empleando un middleware de autenticación simple (`EnsureAdminPassword`) que contraste el input del usuario contra la variable de entorno `ADMIN_PASSWORD`, prescindiendo de tablas de usuarios en la base de datos.
-*   **FR-021**: El layout del Dashboard Administrativo (`/admin`) MUST prescindir de las restricciones Mobile-First, adoptando una estructura Grid/Flexbox diseñada para pantallas de alta resolución (Desktop).
-*   **FR-022**: La visualización de retroalimentación cualitativa MUST ocurrir de forma asíncrona y sobre la misma vista del ranking, empleando componentes modales o Slide-overs nativos de Livewire/Alpine.
-*   **FR-023**: El sistema MUST permitir la actualización en tiempo real de los campos `title`, `speakers` y `time_block_id` de una charla existente desde el panel `/admin`, invalidando la caché de Redis correspondiente para que los asistentes vean los cambios al instante sin afectar sus votos registrados.
+
+*   **FR-019 (Importación de Agenda):** El sistema MUST proveer una interfaz gráfica de carga de archivos que admita formatos `.xlsx` y `.csv`, procesando y estructurando el inventario de la agenda mediante el servicio de evaluación.
+*   **FR-020 (Seguridad Administrativa):** El sistema MUST proteger todas las rutas bajo `/admin` mediante un middleware de autenticación por contraseña de entorno (`ADMIN_PASSWORD`), denegando accesos no autorizados sin depender de esquemas de usuarios en base de datos.
+*   **FR-021 (Layout de Administración):** El panel de administración (`/admin` y `/admin/setup`) MUST emplear un layout exclusivo de escritorio (Desktop), ocupando el ancho útil de pantalla mediante un diseño Grid/Flexbox desacoplado del marco móvil.
+*   **FR-022 (Exploración Cualitativa):** La visualización de retroalimentación cualitativa en el Dashboard MUST desplegarse asíncronamente mediante un panel lateral (Slide-over) sin abandonar ni recargar la vista principal.
+*   **FR-023 (Edición de Charlas en Vivo):** El sistema MUST permitir la actualización en tiempo real de los datos de una charla desde el panel `/admin`, purgando la caché de Redis correspondiente sin alterar la integridad de las evaluaciones registradas.
+*   **FR-024 (Navegación Explícita y Retorno):** Las vistas móviles del asistente MUST incluir una acción visible "Volver a la Agenda" **tanto en la pantalla de calificación activa (corazones) como en la tarjeta de confirmación de éxito**, asegurando un objetivo táctil $\ge 44 \times 44\text{ px}$. La vista `/admin/setup` MUST incluir la acción "Volver al Dashboard".
+*   **FR-025 (Cabecera Móvil Fija Unificada):** Todas las vistas del asistente (`/`, `/evaluator/*`, confirmaciones) MUST compartir una cabecera global fija (`sticky top-0`) renderizada como una barra blanca de ancho completo con sombra inferior, situando el logotipo oficial en el centro **por fuera de las tarjetas internas de contenido**.
+*   **FR-026 (Depuración de Header en Admin):** El encabezado del Dashboard Administrativo (`/admin`) MUST presentar una estructura limpia y sobria, omitiendo etiquetas de entorno redundantes (como "DESKTOP") y bloques de texto secundarios saturados.
+*   **FR-027 (Branding y Contraste en Pantalla Pública):** El Leaderboard Público (`/public`) MUST renderizar el logotipo oficial enmarcado dentro de un contenedor claro de alto contraste para garantizar su visibilidad sobre el fondo oscuro, eliminando textos de títulos duplicados.
+*   **FR-028 (Contención Mobile-First):** Las vistas destinadas al asistente MUST restringir su contenedor principal a una columna vertical centrándose en pantalla (`max-w-md mx-auto`) al ser abiertas en monitores de escritorio. Esta restricción de ancho NUNCA afectará a las vistas `/admin` ni `/public`.
+*   **FR-029 (Consistencia de Redondeo / Design Tokens):** Todas las tarjetas contenedoras de la aplicación MUST estandarizar sus esquinas con la clase Tailwind `rounded-2xl` (o `16px`), y todos los botones/entradas con `rounded-xl` (o `12px`), eliminando discrepancias de bordes rectos o curvaturas desproporcionadas en toda la interfaz.
 
 ## Success Criteria *(mandatory)*
 

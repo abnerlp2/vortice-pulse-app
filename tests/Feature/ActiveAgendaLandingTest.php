@@ -57,4 +57,14 @@ class ActiveAgendaLandingTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('No hay charlas activas en este momento');
     }
+
+    public function test_it_renders_sticky_header_and_max_w_md_container()
+    {
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('vortice-logo.svg');
+        $response->assertSee('sticky top-0');
+        $response->assertSee('max-w-md');
+    }
 }

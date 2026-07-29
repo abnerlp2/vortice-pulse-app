@@ -136,3 +136,29 @@ it('accepts an evaluation submitted exactly during the talk time block or within
         'device_signature' => $signature,
     ]);
 });
+
+it('renders back to agenda button on active rating view and success state', function () {
+    $signature = hash('sha256', 'mock-device-uuid-back-btn');
+
+    // Active rating state
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->assertSee('Volver a la Agenda')
+        ->assertSee('/')
+        // Success state
+        ->set('rating', 5)
+        ->set('deviceSignature', $signature)
+        ->call('submitEvaluation')
+        ->assertSee('Volver a la Agenda')
+        ->assertSee('/');
+});
+
+it('renders sticky header, textarea styles and mobile container constraints', function () {
+    $this->get(route('talk.show', $this->talk->id))
+        ->assertSee('vortice-logo.svg')
+        ->assertSee('sticky top-0')
+        ->assertSee('max-w-md');
+
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->assertSee('Volver a la Agenda')
+        ->assertSee('rounded-xl p-3');
+});
