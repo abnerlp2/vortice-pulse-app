@@ -17,6 +17,12 @@ class AdminDashboard extends Component
     public array $offlineAlert = [];
     public bool $isBlockActive = true;
     public string $blockStatus = 'En vivo';
+    public bool $showSlideOver = false;
+    public ?string $selectedTalkId = null;
+    public array $qualitativeComments = [
+        'liked' => [],
+        'improvement' => [],
+    ];
 
     public function mount(EvaluationRepositoryInterface $repository)
     {
@@ -97,5 +103,24 @@ class AdminDashboard extends Component
 
         $this->isBlockActive = true;
         $this->blockStatus = 'En vivo';
+    }
+
+    public function loadQualitativeData(string $talkId): void
+    {
+        $this->selectedTalkId = $talkId;
+        
+        $evaluations = \App\Models\Evaluation::where('talk_id', $talkId)
+            ->where(function ($query) {
+                $query->whereNotNull('liked_aspects')
+                      ->orWhereNotNull('improvement_aspects');
+            })
+            ->get();
+
+        $this->qualitativeComments = [
+            'liked' => $evaluations->pluck('liked_aspects')->filter()->values()->toArray(),
+            'improvement' => $evaluations->pluck('improvement_aspects')->filter()->values()->toArray(),
+        ];
+
+        $this->showSlideOver = true;
     }
 }

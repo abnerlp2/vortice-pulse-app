@@ -1,7 +1,5 @@
 <div class="min-h-screen bg-gray-50 flex flex-col">
-    <header class="bg-indigo-600 text-white p-4 shadow-md">
-        <h1 class="text-xl font-bold">Vortice Pulse - Agenda Activa</h1>
-    </header>
+    <x-header />
 
     <main class="flex-grow p-4">
         @if(session('error'))

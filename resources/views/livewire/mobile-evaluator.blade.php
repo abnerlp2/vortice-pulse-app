@@ -4,6 +4,8 @@
     @retry-offline-sync.window="retryPendingEvaluations()"
     class="flex flex-col items-center justify-center min-h-[50vh] p-4 bg-gray-50 rounded-xl shadow-sm max-w-sm mx-auto"
 >
+    <x-header />
+
     <template x-if="$store.vorticeCache.hasOfflinePending">
         <div class="mb-4 w-full">
             @include('livewire.components.offline-status-indicator')
@@ -11,7 +13,14 @@
     </template>
 
     <!-- Estado: Voto emitido -->
-    <div x-show="$wire.hasSubmitted" x-cloak class="text-center p-6 space-y-4">
+    <div 
+        x-show="$wire.hasSubmitted" 
+        x-cloak 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-90"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        class="text-center p-6 space-y-4"
+    >
         <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
             <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         </div>
@@ -20,7 +29,7 @@
     </div>
 
     <!-- Estado: Formulario Activo -->
-    <div x-show="!$wire.hasSubmitted" class="w-full space-y-8">
+    <div x-show="!$wire.hasSubmitted" x-transition.opacity.duration.300ms class="w-full space-y-8">
         <div class="text-center">
             <h2 class="text-2xl font-bold text-gray-800">¿Qué te pareció esta charla?</h2>
             <p class="text-gray-500 mt-2 text-sm">Toca un corazón para calificar</p>
@@ -44,8 +53,14 @@
         </div>
 
         <!-- Mensajes de Error de Validación -->
-        @error('rating') <span class="text-red-500 text-sm block text-center font-medium">{{ $message }}</span> @enderror
-        @error('deviceSignature') <span class="text-red-500 text-sm block text-center font-medium">{{ $message }}</span> @enderror
+        <div class="min-h-[1.5rem]">
+            @error('rating') 
+                <span x-transition.fade class="text-red-500 text-sm block text-center font-medium">{{ $message }}</span> 
+            @enderror
+            @error('deviceSignature') 
+                <span x-transition.fade class="text-red-500 text-sm block text-center font-medium">{{ $message }}</span> 
+            @enderror
+        </div>
 
         <!-- Aspectos Cualitativos (Opcionales) -->
         <div class="space-y-4 px-4 text-left mt-6">

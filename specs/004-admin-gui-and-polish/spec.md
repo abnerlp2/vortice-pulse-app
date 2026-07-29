@@ -43,9 +43,23 @@ Como Asistente del evento, quiero visualizar el logotipo oficial de Vórtice 202
 
 ---
 
+### User Story 4 - Edición individual de charlas (Priority: P1)
+Como Organizador del evento, quiero editar los detalles de una charla específica (nombre de la charla, expositor, horario) desde el panel de administración, para registrar cambios de última hora en la agenda sin tener que importar nuevamente un archivo de Excel.
+
+**Why this priority**: En un evento en vivo, los nombres de ponentes o títulos cambian a último minuto. Depender de reimportar el archivo completo genera riesgo de sobrescribir datos de evaluaciones activas.
+
+**Independent Test**: En el dashboard de administración `/admin`, seleccionar una charla, hacer clic en "Editar", modificar su título/speaker y presionar "Guardar". Verificar en la base de datos y en Redis que los datos se actualizaron y que las evaluaciones previas de esa charla se mantienen intactas.
+
+**Acceptance Scenarios**:
+1. **Given** que el Organizador se encuentra autenticado en `/admin`, **When** selecciona una charla, modifica su título o conferencista y guarda los cambios, **Then** el sistema actualiza la base de datos, purga la caché afectada en Redis y refleja la información corregida en el Dashboard y en la app móvil.
+2. **Given** que el Organizador está editando una charla, **When** intenta dejar el campo de título o el bloque horario en blanco y presiona "Guardar", **Then** el sistema detiene la transacción, resalta los campos obligatorios con un mensaje de validación y mantiene los datos originales.
+
+---
+
 ### Edge Cases
 *   **Acceso no autorizado al panel administrativo**: Si un usuario regular intenta navegar a `/admin` o `/admin/setup`, el sistema MUST interceptar la petición vía middleware y exigir una contraseña. El sistema validará el acceso contra la variable de entorno `ADMIN_PASSWORD` definida en el servidor.
 *   **Comentarios cualitativos vacíos**: Si el Organizador inspecciona una charla donde los asistentes solo enviaron corazones pero ningún comentario de texto, el panel lateral MUST mostrar un mensaje de estado vacío (ej. "No hay comentarios cualitativos registrados para esta sesión").
+*   **Edición de una charla en plena votación**: Si el organizador edita el título de una charla mientras el bloque horario está activo y los usuarios están votando, el sistema MUST aplicar una transacción de actualización sobre la tabla talks sin alterar ni borrar los registros vinculados en la tabla evaluations.
 
 ## Requirements *(mandatory)*
 
@@ -54,6 +68,7 @@ Como Asistente del evento, quiero visualizar el logotipo oficial de Vórtice 202
 *   **FR-020**: El sistema MUST proteger todas las rutas bajo el prefijo `/admin` empleando un middleware de autenticación simple (`EnsureAdminPassword`) que contraste el input del usuario contra la variable de entorno `ADMIN_PASSWORD`, prescindiendo de tablas de usuarios en la base de datos.
 *   **FR-021**: El layout del Dashboard Administrativo (`/admin`) MUST prescindir de las restricciones Mobile-First, adoptando una estructura Grid/Flexbox diseñada para pantallas de alta resolución (Desktop).
 *   **FR-022**: La visualización de retroalimentación cualitativa MUST ocurrir de forma asíncrona y sobre la misma vista del ranking, empleando componentes modales o Slide-overs nativos de Livewire/Alpine.
+*   **FR-023**: El sistema MUST permitir la actualización en tiempo real de los campos `title`, `speakers` y `time_block_id` de una charla existente desde el panel `/admin`, invalidando la caché de Redis correspondiente para que los asistentes vean los cambios al instante sin afectar sus votos registrados.
 
 ## Success Criteria *(mandatory)*
 

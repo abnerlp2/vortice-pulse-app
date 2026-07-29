@@ -60,3 +60,11 @@ resources/
 1. **Autenticación Minimalista (`EnsureAdminPassword`)**: Para evitar el sobre-entrenamiento de la base de datos con tablas de usuarios, la ruta administrativa se protegerá comparando un input de sesión contra `env('ADMIN_PASSWORD')`.
 2. **Reutilización del Core (`EvaluationService`)**: El componente visual `AdminSetup` no reimplementará lógica de parseo; simplemente validará el archivo temporal (XLSX/CSV) en Livewire y delegará la persistencia y purga de caché al servicio de dominio ya construido en la Feature 001.
 3. **Drill-down Cualitativo Asíncrono**: En lugar de navegar a una nueva vista `/admin/talk/{id}`, la vista del dashboard cargará dinámicamente los comentarios de la charla seleccionada en una propiedad del componente y utilizará Alpine.js para deslizar un panel lateral sobre el ranking activo.
+
+## Phase 5: User Story 4 - Edición Cualitativa de Charlas (Drill-down Edit)
+
+**Objective**: Permitir la corrección en vivo de los datos de una charla directamente desde el panel de administración, invalidando la caché de Redis asociada sin afectar las evaluaciones existentes.
+
+- **Autenticación**: Ruta protegida por `EnsureAdminPassword`.
+- **Backend/Livewire**: Se extenderá el componente `AdminDashboard` (o un componente anidado `AdminEditTalk`) para manejar el estado del formulario de edición, aplicar reglas de validación estrictas e invalidar las llaves de caché correspondientes en Redis.
+- **Frontend**: El formulario vivirá dentro del mismo Slide-over (Panel lateral) construido en la Fase 3, o a través de un modal nativo en la vista Desktop, evitando recargas de página.
