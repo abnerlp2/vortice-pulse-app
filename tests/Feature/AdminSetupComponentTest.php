@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class);
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
+use App\Livewire\AdminSetup;
+use App\Services\EvaluationService;
+use Mockery\MockInterface;
+
+test('admin setup component requires authenticated session', function () {
+    Livewire::test(AdminSetup::class)
+        ->assertStatus(403);
+});
+
+test('admin can upload a valid csv file', function () {
+    $this->session(['admin_authenticated' => true]);
+    Storage::fake('local');
+
+    $file = UploadedFile::fake()->create('agenda.csv', 100, 'text/csv');
+
+    $this->mock(EvaluationService::class, function (MockInterface $mock) {
+        $mock->shouldReceive('importAgendaFromCsv')->once()->andReturn(true);
+    });
+
+    Livewire::test(AdminSetup::class)
+        ->set('file', $file)
+        ->call('import')
+        ->assertHasNoErrors()
+        ->assertSee('Importación completada con éxito');
+});
+
+test('admin cannot upload invalid file extensions', function () {
+    $this->session(['admin_authenticated' => true]);
+    Storage::fake('local');
+
+    $file = UploadedFile::fake()->create('malicious.php', 100);
+
+    Livewire::test(AdminSetup::class)
+        ->set('file', $file)
+        ->call('import')
+        ->assertHasErrors(['file']);
+});

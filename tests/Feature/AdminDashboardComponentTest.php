@@ -67,3 +67,45 @@ it('shows the offline ranking alert banner when the dashboard receives an alert'
         ->assertSee('El orden consolidado del ranking cambió tras procesar propuestas offline.')
         ->assertSee('Admin Dashboard Realtime');
 });
+
+it('isolates and loads qualitative qualitative comments for a specific talk', function () {
+    $this->session(['admin_authenticated' => true]);
+
+    $talk = Talk::create([
+        'id' => 'talk-qualitative',
+        'title' => 'Feedback Talk',
+        'speaker' => 'Speaker Test',
+        'time_block_id' => $this->timeBlock->id,
+        'start_time' => now()->subMinutes(10),
+        'end_time' => now()->addMinutes(10),
+    ]);
+
+    \App\Models\Evaluation::create([
+        'talk_id' => $talk->id,
+        'rating' => 5,
+        'device_signature' => 'device-1',
+        'liked_aspects' => 'Excelente oratoria',
+        'improvement_aspects' => 'Más ejemplos',
+    ]);
+
+    \App\Models\Evaluation::create([
+        'talk_id' => $talk->id,
+        'rating' => 4,
+        'device_signature' => 'device-2',
+        'liked_aspects' => 'Material visual claro',
+        'improvement_aspects' => 'Audio bajo',
+    ]);
+
+    Livewire::test(\App\Livewire\AdminDashboard::class)
+        ->call('loadQualitativeData', $talk->id)
+        ->assertSet('selectedTalkId', $talk->id)
+        ->assertSet('qualitativeComments.liked', [
+            'Excelente oratoria',
+            'Material visual claro'
+        ])
+        ->assertSet('qualitativeComments.improvement', [
+            'Más ejemplos',
+            'Audio bajo'
+        ])
+        ->assertSet('showSlideOver', true);
+});
