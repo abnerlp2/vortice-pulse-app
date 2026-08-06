@@ -7,6 +7,7 @@ Toda funcionalidad debe comenzar como una biblioteca independiente y autónoma. 
 
 ### II. CLI Interface
 Toda biblioteca debe exponer su funcionalidad principal a través de una interfaz de línea de comandos. El conjunto completo de servicios del sistema se estructurará para interactuar a través de comandos Artisan personalizados de Laravel. Se garantizará la existencia de comandos específicos para vaciar caché, forzar el estado de Redis y simular cargas masivas de estrés (hasta 300 usuarios concurrentes enviando evaluaciones de manera simultánea) antes de acoplar el frontend.
+*(Excepción: El módulo de configuración administrativa puede consumir los Services directamente vía GUI Livewire para facilitar la carga de archivos Excel y la gestión del evento).*
 
 ### III. Test-First (NON-NEGOTIABLE)
 Se exige de forma estricta un ciclo de desarrollo guiado por pruebas. Queda prohibido escribir código de producción sin contar previamente con una prueba automatizada escrita en PEST PHP que falle. El ciclo de desarrollo Red-Green-Refactor gobernará la construcción de cada controlador, clase de servicio y componente reactivo.
@@ -32,9 +33,9 @@ Queda estrictamente prohibido incluir comentarios explicativos, justificaciones 
 ## Development Workflow
 
 ### Frictionless and Mobile-First Gates
-*   **Optimización móvil**: El diseño del frontend se optimizará con un enfoque estricto Mobile-First en orientación vertical (Portrait).
+*   **Optimización móvil**: El diseño del frontend se optimizará con un enfoque estricto Mobile-First en orientación vertical (Portrait). *(Excepción: El dashboard de administración `/admin` está exento de esta regla y se optimizará exclusivamente para pantallas de escritorio/Desktop).*
 *   **Áreas interactivas**: Todos los elementos táctiles interactivos (corazones de calificación, campos de formulario y botones de envío) contarán con un área interactiva de acción mínima de **44x44** píxeles para evitar toques accidentales con el pulgar.
-*   **Sin autenticación**: Se prohíbe el uso de sistemas tradicionales de inicio de sesión o recopilación de datos personales para los asistentes del evento. La validación de unicidad de voto se resolverá de forma transparente mediante la firma segura del dispositivo.
+*   **Sin autenticación**: Se prohíbe el uso de sistemas tradicionales de inicio de sesión o recopilación de datos personales para los asistentes del evento. La validación de unicidad de voto se resolverá de forma transparente mediante la firma segura del dispositivo. *(Excepción: El panel de administración `/admin` debe estar protegido por un middleware de contraseña o autenticación básica para prevenir acceso público no autorizado).*
 
 ## Governance
 
@@ -45,5 +46,7 @@ Queda estrictamente prohibido incluir comentarios explicativos, justificaciones 
 
 *   **2026-07-16**: Queda estrictamente prohibido introducir lógica condicional o valores estáticos hardcodeados en los archivos de producción de la aplicación (app/) con el único propósito de satisfacer un entorno de testing. Los datos de prueba deben ser inyectados dinámicamente y de forma realista por el propio framework de pruebas (en las clases *Test.php) antes de la ejecución del flujo a probar.
 *   **2026-07-16**: El flujo de desarrollo debe respetar la separación de responsabilidades. Los prompts de interacción diaria con el agente de VS Code no deben instruir de forma explícita qué sintaxis usar, qué archivos crear, o qué dependencias inyectar de manera manual si esta información ya reside en plan.md o tasks.md. El agente debe derivar siempre su comportamiento leyendo autónomamente el espacio de trabajo local para evitar la sobreespecificación y la degradación de la calidad del plan.
+*   **2026-07-27**: Se relaja la restricción "CLI Interface" y "Mobile-First" exclusivamente para el módulo de administración (`/admin`), permitiendo la creación de una GUI en formato Desktop para la importación visual de Excel y el drill-down cualitativo. Se autoriza el uso de un mecanismo de protección básico (Auth) para esta ruta.
+*   **2026-08-05**: Se erradica por completo la funcionalidad de generación y acceso mediante códigos QR físicos ("YAGNI"). El enrutamiento de los asistentes dependerá exclusivamente de la URL raíz pública y la selección visual. Queda prohibida la instalación de dependencias externas para generación de códigos QR.
 
-**Version**: 1.1.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-07-16
+**Version**: 1.3.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-08-05

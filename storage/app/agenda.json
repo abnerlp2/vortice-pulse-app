@@ -1,0 +1,133 @@
+{
+  "time_blocks": [
+    {
+      "id": "block-1",
+      "start_time": "2026-07-29 06:00:00",
+      "end_time": "2026-07-29 08:00:00"
+    },
+    {
+      "id": "block-2",
+      "start_time": "2026-07-29 08:00:00",
+      "end_time": "2026-07-29 22:00:00"
+    },
+    {
+      "id": "block-3",
+      "start_time": "2026-07-30 10:00:00",
+      "end_time": "2026-07-30 14:00:00"
+    }
+  ],
+  "talks": [
+    {
+      "id": "talk-1",
+      "title": "Keynote de Apertura: El Futuro del Software Asistido por IA",
+      "speaker": "Martín Sombra",
+      "time_block_id": "block-1",
+      "start_time": "2026-07-29 06:00:00",
+      "end_time": "2026-07-29 06:40:00"
+    },
+    {
+      "id": "talk-2",
+      "title": "DevOps y Despliegues Continuos con Laravel Sail",
+      "speaker": "Gabriel Toro",
+      "time_block_id": "block-1",
+      "start_time": "2026-07-29 06:40:00",
+      "end_time": "2026-07-29 07:20:00"
+    },
+    {
+      "id": "talk-3",
+      "title": "Refactorización Segura con Suites de Pruebas PEST",
+      "speaker": "Valeria Ríos",
+      "time_block_id": "block-1",
+      "start_time": "2026-07-29 07:20:00",
+      "end_time": "2026-07-29 08:00:00"
+    },
+    {
+      "id": "talk-4",
+      "title": "Métricas en Tiempo Real con Laravel Reverb & Livewire v4",
+      "speaker": "Carolina Gómez & Felipe Restrepo",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 08:00:00",
+      "end_time": "2026-07-29 09:30:00"
+    },
+    {
+      "id": "talk-5",
+      "title": "Resiliencia Offline y Persistencia Local en Alpine.js",
+      "speaker": "David Martínez",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 09:30:00",
+      "end_time": "2026-07-29 11:00:00"
+    },
+    {
+      "id": "talk-6",
+      "title": "Arquitecturas Emergentes y Ética en la IA Generativa",
+      "speaker": "Elena Rivas",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 11:00:00",
+      "end_time": "2026-07-29 12:30:00"
+    },
+    {
+      "id": "talk-7",
+      "title": "Desarrollo Guiado por Especificaciones (SDD) con IA",
+      "speaker": "Abner Trejos",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 12:30:00",
+      "end_time": "2026-07-29 14:00:00"
+    },
+    {
+      "id": "talk-8",
+      "title": "Estrategias de Caché de Alta Concurrencia con Redis",
+      "speaker": "Carlos Mendoza",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 14:00:00",
+      "end_time": "2026-07-29 15:30:00"
+    },
+    {
+      "id": "talk-9",
+      "title": "Diseño de Interfaces Mobile-First sin Fricción",
+      "speaker": "Sofía Castro",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 15:30:00",
+      "end_time": "2026-07-29 17:00:00"
+    },
+    {
+      "id": "talk-10",
+      "title": "Gobernanza de Prompts y Gestión de Tokens en IDEs",
+      "speaker": "Andrés Silva",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 17:00:00",
+      "end_time": "2026-07-29 18:30:00"
+    },
+    {
+      "id": "talk-11",
+      "title": "Event-Driven Architecture y Sincronización en Vivo",
+      "speaker": "Lucía Ramírez",
+      "time_block_id": "block-2",
+      "start_time": "2026-07-29 18:30:00",
+      "end_time": "2026-07-29 22:00:00"
+    },
+    {
+      "id": "talk-12",
+      "title": "Transformación Ágil y Cultura de Aprendizaje Continuo",
+      "speaker": "Jorge Betancur",
+      "time_block_id": "block-3",
+      "start_time": "2026-07-30 10:00:00",
+      "end_time": "2026-07-30 11:20:00"
+    },
+    {
+      "id": "talk-13",
+      "title": "Seguridad y Firmas de Dispositivo Anónimas",
+      "speaker": "Natalia Hoyos",
+      "time_block_id": "block-3",
+      "start_time": "2026-07-30 11:20:00",
+      "end_time": "2026-07-30 12:40:00"
+    },
+    {
+      "id": "talk-14",
+      "title": "Cierre y Conclusiones Vórtice 2026",
+      "speaker": "Comité Organizador",
+      "time_block_id": "block-3",
+      "start_time": "2026-07-30 12:40:00",
+      "end_time": "2026-07-30 14:00:00"
+    }
+  ]
+}
