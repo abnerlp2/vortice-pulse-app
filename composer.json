@@ -12,9 +12,8 @@
         "laravel/framework": "^11.0",
         "laravel/reverb": "^1.10",
         "livewire/livewire": "^4.3",
-        "maatwebsite/excel": "^3.1",
-        "predis/predis": "^3.5",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "maatwebsite/excel": "*",
+        "predis/predis": "^3.5"
     },
     "require-dev": {
         "laravel/sail": "^1.63",

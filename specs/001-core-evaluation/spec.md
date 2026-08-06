@@ -14,7 +14,7 @@
 
 Como organizador del evento, quiero importar el listado oficial de charlas y bloques horarios a través de la línea de comandos para que la base de datos se inicialice correctamente y el sistema exponga la información sin necesidad de una interfaz web administrativa.
 
-**Why this priority**: Es la base de datos de datos de la que depende toda la aplicación. Sin charlas ni bloques horarios cargados, es imposible generar accesos QR o permitir cualquier tipo de votación.
+**Why this priority**: Es la base de datos de datos de la que depende toda la aplicación. Sin charlas ni bloques horarios cargados, es imposible permitir cualquier tipo de votación.
 
 **Independent Test**: Puede probarse de manera independiente ejecutando el comando de consola Artisan pasándole una ruta de archivo JSON estructurada y validando que los registros existan en la persistencia y la caché de Redis se limpie de inmediato.
 
@@ -50,13 +50,13 @@ Como organizador del evento, quiero restringir la evaluación de cada charla par
 
 **Acceptance Scenarios**:
 
-1. **Given** que un bloque de horario finalizó hace más de 10 minutos, **When** un asistente escanea el código QR de una charla de ese bloque e intenta votar, **Then** el sistema bloquea el envío, deshabilita los controles interactivos y muestra un mensaje amigable indicando que la ventana de tiempo ha expirado.
+1. **Given** que un bloque de horario finalizó hace más de 10 minutos, **When** un asistente ingresa a la URL de una charla de ese bloque e intenta votar, **Then** el sistema bloquea el envío, deshabilita los controles interactivos y muestra un mensaje amigable indicando que la ventana de tiempo ha expirado.
 
 ---
 
 ### Edge Cases
 
-- **Acceso anticipado al código QR**: ¿Qué ocurre si un asistente escanea el código QR antes de la hora de inicio oficial? El sistema denegará la votación, inhabilitará el formulario y desplegará una vista informativa móvil con la cuenta regresiva hacia el inicio de la sesión.
+- **Acceso anticipado a la evaluación**: ¿Qué ocurre si un asistente ingresa al enlace antes de la hora de inicio oficial? El sistema denegará la votación, inhabilitará el formulario y desplegará una vista informativa móvil con la cuenta regresiva hacia el inicio de la sesión.
 - **Pérdida de conectividad durante el envío**: Si el dispositivo móvil del asistente se queda sin conexión al pulsar "Enviar", Alpine.js capturará el estado sin conexión y retendrá la petición encolada temporalmente en memoria para reintentar de forma segura en cuanto se restablezca el enlace.
 
 ## Requirements *(mandatory)*
@@ -84,5 +84,5 @@ Como organizador del evento, quiero restringir la evaluación de cada charla par
 
 ## Assumptions
 
-- Se asume que los asistentes disponen de un dispositivo inteligente con navegador web móvil estándar y lector de códigos QR nativo o por aplicación.
+- Se asume que los asistentes disponen de un dispositivo inteligente con navegador web móvil estándar.
 - Se asume que el servidor de base de datos de producción cuenta con una base de datos relacional MySQL y una instancia de Redis configurada y disponible de forma local.
