@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Detrás del proxy de EasyPanel (Traefik): respeta X-Forwarded-* para HTTPS.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin.auth' => \App\Http\Middleware\EnsureAdminPassword::class,
         ]);
