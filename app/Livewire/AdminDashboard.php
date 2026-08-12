@@ -3,7 +3,9 @@
 namespace App\Livewire;
 
 use App\Core\Evaluation\Contracts\EvaluationRepositoryInterface;
+use App\Core\Evaluation\Services\RedisCacheHelper;
 use App\Models\Talk;
+use App\Models\TimeBlock;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -24,8 +26,22 @@ class AdminDashboard extends Component
         'improvement' => [],
     ];
 
-    public function mount(EvaluationRepositoryInterface $repository)
+    public bool $showEditModal = false;
+    public ?string $editingTalkId = null;
+    public string $editTitle = '';
+    public string $editSpeaker = '';
+    public string $editSpeakers = '';
+    public string $editTimeBlockId = '';
+    public array $availableTimeBlocks = [];
+
+    public function mount(?EvaluationRepositoryInterface $repository = null): void
     {
+        $this->loadTalks($repository);
+    }
+
+    public function loadTalks(?EvaluationRepositoryInterface $repository = null): void
+    {
+        $repository = $repository ?? app(EvaluationRepositoryInterface::class);
         $talks = Talk::with('timeBlock')->get();
 
         $this->talks = $talks->map(function (Talk $talk) use ($repository) {
@@ -50,11 +66,82 @@ class AdminDashboard extends Component
             ];
         })->toArray();
         
-        // Sort to get podium order
         $sortedTalks = collect($this->talks)->sortByDesc('average')->values();
         $this->podiumOrder = $sortedTalks->pluck('id')->toArray();
 
+        $this->availableTimeBlocks = TimeBlock::all()->toArray();
+
         $this->evaluateBlockStatus();
+    }
+
+    public function editTalk(string $talkId): void
+    {
+        $talk = Talk::find($talkId);
+
+        if (!$talk) {
+            return;
+        }
+
+        $this->editingTalkId = $talk->id;
+        $this->editTitle = $talk->title;
+        $this->editSpeaker = $talk->speaker;
+        $this->editSpeakers = $talk->speaker;
+        $this->editTimeBlockId = $talk->time_block_id;
+        $this->availableTimeBlocks = TimeBlock::all()->toArray();
+        $this->showEditModal = true;
+    }
+
+    public function updatedEditSpeaker(string $value): void
+    {
+        $this->editSpeakers = $value;
+    }
+
+    public function updatedEditSpeakers(string $value): void
+    {
+        $this->editSpeaker = $value;
+    }
+
+    public function updateTalk(): void
+    {
+        $this->validate([
+            'editTitle' => 'required|string|min:1|max:255',
+            'editSpeaker' => 'required|string|min:1|max:255',
+            'editTimeBlockId' => 'required|string|exists:time_blocks,id',
+        ], [
+            'editTitle.required' => 'El título es obligatorio.',
+            'editSpeaker.required' => 'El conferencista es obligatorio.',
+            'editTimeBlockId.required' => 'El bloque de tiempo es obligatorio.',
+            'editTimeBlockId.exists' => 'El bloque de tiempo no es válido.',
+        ]);
+
+        if (!$this->editingTalkId) {
+            return;
+        }
+
+        $talk = Talk::findOrFail($this->editingTalkId);
+        $talk->update([
+            'title' => $this->editTitle,
+            'speaker' => $this->editSpeaker,
+            'time_block_id' => $this->editTimeBlockId,
+        ]);
+
+        $cacheHelper = app(RedisCacheHelper::class);
+        $cacheHelper->delete("vortice:pulse:talk:{$talk->id}");
+
+        $this->loadTalks();
+
+        $this->showEditModal = false;
+        $this->editingTalkId = null;
+        $this->resetValidation();
+        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editTimeBlockId']);
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->showEditModal = false;
+        $this->editingTalkId = null;
+        $this->resetValidation();
+        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editTimeBlockId']);
     }
 
     public function render()

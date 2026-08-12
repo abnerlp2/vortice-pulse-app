@@ -1,9 +1,9 @@
-<div class="min-h-screen bg-gray-50 flex flex-col">
-    <header class="bg-indigo-600 text-white p-4 shadow-md">
-        <h1 class="text-xl font-bold">Vortice Pulse - Agenda Activa</h1>
+<div class="max-w-md mx-auto min-h-screen bg-gray-50 shadow-sm flex flex-col">
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm py-3 px-4 flex justify-center items-center">
+        <img src="<?php echo e(asset('images/vortice-logo.svg')); ?>" alt="Vórtice 2026" class="h-8 w-auto">
     </header>
 
-    <main class="flex-grow p-4">
+    <main class="flex-grow p-4 w-full">
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('error')): ?>
             <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
                 <?php echo e(session('error')); ?>
@@ -30,7 +30,7 @@
             <div class="space-y-4">
                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $talks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $talk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoopIteration(); ?><?php endif; ?>
                     <a href="<?php echo e(route('talk.show', $talk->id)); ?>" 
-                       class="block bg-white p-4 rounded-lg shadow border border-gray-200 active:bg-gray-100 transition-colors"
+                       class="block bg-white p-4 rounded-2xl shadow border border-gray-200 active:bg-gray-100 transition-colors"
                        style="min-height: 80px;">
                         <div class="flex justify-between items-center h-full">
                             <div>

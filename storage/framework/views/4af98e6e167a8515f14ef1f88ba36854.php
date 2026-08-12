@@ -1,9 +1,13 @@
 <div class="min-h-screen bg-gray-900 text-white p-8 overflow-hidden">
     <div class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-end mb-12 border-b border-gray-800 pb-6">
-            <div>
-                <h1 class="text-5xl font-extrabold tracking-tight text-indigo-400">VORTICE PULSE</h1>
-                <p class="text-xl text-gray-400 mt-2">Ranking de Ponencias en Tiempo Real</p>
+        <header class="flex justify-between items-center mb-12 border-b border-gray-800 pb-6">
+            <div class="flex items-center gap-6">
+                <div class="bg-white/95 px-4 py-2 rounded-2xl shadow-md inline-block">
+                    <img src="<?php echo e(asset('images/vortice-logo.svg')); ?>" class="h-8 w-auto">
+                </div>
+                <div>
+                    <p class="text-2xl font-bold tracking-tight text-indigo-400">Ranking de Ponencias en Tiempo Real</p>
+                </div>
             </div>
             <div class="text-right">
                 <div class="text-sm font-mono text-gray-500 uppercase tracking-widest">Estado del Evento</div>

@@ -55,10 +55,10 @@
 
 **Objective**: Formulario de edición en el dashboard para mutar datos en caliente sin romper la integridad de las evaluaciones previas.
 
-- [ ] T017 Crear la prueba de integración en PEST `tests/Feature/AdminEditTalkTest.php` validando que la mutación de campos actualiza MySQL, purga correctamente la caché de la charla en Redis y rechaza campos en blanco. *(Test-First Imperative)*
-- [ ] T018 Refactorizar `app/Http/Livewire/AdminDashboard.php` (o crear un componente hijo) para inyectar los métodos de edición (`editTalk()`, `updateTalk()`), aplicando tipado estricto y reglas de validación en los campos `title`, `speakers` y `time_block_id`.
-- [ ] T019 Implementar la interfaz del formulario de edición dentro de `resources/views/livewire/admin-dashboard.blade.php` (dentro del Slide-over o un modal Desktop), asegurando manejo de errores y estados de carga (`wire:loading`).
-- [ ] T020 [P] Ejecutar la suite de pruebas completa de la Feature 004 para garantizar que la nueva funcionalidad de edición no generó regresiones en la importación masiva ni en el visor cualitativo.
+- [x] T017 Crear la prueba de integración en PEST `tests/Feature/AdminEditTalkTest.php` validando que la mutación de campos actualiza MySQL, purga correctamente la caché de la charla en Redis y rechaza campos en blanco. *(Test-First Imperative)*
+- [x] T018 Refactorizar `app/Http/Livewire/AdminDashboard.php` (o crear un componente hijo) para inyectar los métodos de edición (`editTalk()`, `updateTalk()`), aplicando tipado estricto y reglas de validación en los campos `title`, `speakers` y `time_block_id`.
+- [x] T019 Implementar la interfaz del formulario de edición dentro de `resources/views/livewire/admin-dashboard.blade.php` (dentro del Slide-over o un modal Desktop), asegurando manejo de errores y estados de carga (`wire:loading`).
+- [x] T020 [P] Ejecutar la suite de pruebas completa de la Feature 004 para garantizar que la nueva funcionalidad de edición no generó regresiones en la importación masiva ni en el visor cualitativo.
 
 ---
 

@@ -59,7 +59,18 @@
                                 <p class="text-slate-400 uppercase tracking-widest text-xs font-semibold">{{ $talk['speaker'] }}</p>
                                 <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors mt-0.5">{{ $talk['title'] }}</h3>
                             </div>
-                            <span class="inline-flex items-center rounded-full bg-sky-100 text-sky-700 px-3 py-1 text-xs font-bold">#{{ $loop->iteration }}</span>
+                            <div class="flex items-center gap-2">
+                                <button 
+                                    type="button"
+                                    wire:click.stop="editTalk('{{ $talk['id'] }}')" 
+                                    class="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 border border-slate-200 transition-colors"
+                                    title="Editar Charla"
+                                >
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    Editar
+                                </button>
+                                <span class="inline-flex items-center rounded-full bg-sky-100 text-sky-700 px-3 py-1 text-xs font-bold">#{{ $loop->iteration }}</span>
+                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div class="rounded-2xl bg-slate-50 p-3.5 border border-slate-100">
@@ -201,6 +212,122 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Formulario de Edición de Charla (T019) -->
+    @if($showEditModal)
+        <div 
+            x-data="{ show: @entangle('showEditModal') }"
+            x-show="show" 
+            class="fixed inset-0 z-50 overflow-y-auto"
+            x-cloak
+        >
+            <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+                <div 
+                    x-show="show"
+                    x-transition:enter="ease-out duration-300"
+                    x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in duration-200"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="fixed inset-0 bg-slate-500 bg-opacity-75 transition-opacity" 
+                    wire:click="cancelEdit"
+                ></div>
+
+                <div 
+                    x-show="show"
+                    x-transition:enter="ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                    x-transition:leave="ease-in duration-200"
+                    x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                    x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-200"
+                >
+                    <form wire:submit.prevent="updateTalk">
+                        <div class="bg-white px-6 pt-6 pb-4">
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                <h3 class="text-xl font-bold text-slate-900">Editar Charla</h3>
+                                <button type="button" wire:click="cancelEdit" class="text-slate-400 hover:text-slate-500 rounded-xl p-1">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="mt-4 space-y-4">
+                                <div>
+                                    <label for="editTitle" class="block text-sm font-semibold text-slate-700">Título de la Charla</label>
+                                    <input 
+                                        type="text" 
+                                        id="editTitle" 
+                                        wire:model="editTitle" 
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTitle') border-rose-500 @enderror"
+                                        placeholder="Ingrese el título"
+                                    >
+                                    @error('editTitle')
+                                        <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="editSpeaker" class="block text-sm font-semibold text-slate-700">Conferencista(s)</label>
+                                    <input 
+                                        type="text" 
+                                        id="editSpeaker" 
+                                        wire:model="editSpeaker" 
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editSpeaker') border-rose-500 @enderror"
+                                        placeholder="Nombre del conferencista"
+                                    >
+                                    @error('editSpeaker')
+                                        <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="editTimeBlockId" class="block text-sm font-semibold text-slate-700">Bloque Horario</label>
+                                    <select 
+                                        id="editTimeBlockId" 
+                                        wire:model="editTimeBlockId" 
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTimeBlockId') border-rose-500 @enderror"
+                                    >
+                                        <option value="">Seleccione un bloque</option>
+                                        @foreach($availableTimeBlocks as $block)
+                                            <option value="{{ $block['id'] }}">
+                                                Bloque {{ $block['id'] }} ({{ \Carbon\Carbon::parse($block['start_time'])->format('H:i') }} - {{ \Carbon\Carbon::parse($block['end_time'])->format('H:i') }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('editTimeBlockId')
+                                        <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 px-6 py-4 flex items-center justify-end gap-3 border-t border-slate-100 rounded-b-2xl">
+                            <button 
+                                type="button" 
+                                wire:click="cancelEdit" 
+                                class="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                type="submit" 
+                                wire:loading.attr="disabled"
+                                class="inline-flex items-center justify-center rounded-xl border border-transparent bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 transition-colors disabled:opacity-50"
+                            >
+                                <span wire:loading.remove wire:target="updateTalk">Guardar Cambios</span>
+                                <span wire:loading wire:target="updateTalk" class="flex items-center gap-2">
+                                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    Guardando...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 <script>

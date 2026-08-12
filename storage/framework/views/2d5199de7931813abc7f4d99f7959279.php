@@ -7,9 +7,9 @@
     
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans antialiased text-gray-900">
+<body class="bg-slate-100 min-h-screen font-sans antialiased text-slate-900">
     
-    <main class="max-w-md mx-auto min-h-screen bg-white shadow-xl relative">
+    <main class="min-h-screen relative">
         <?php echo e($slot); ?>
 
     </main>
