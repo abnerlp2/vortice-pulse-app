@@ -10,6 +10,13 @@
     --color-brand-light: #f2f2f2;
     --color-brand-card: #ffffff;
 
+    /* Versiones legibles como texto sobre fondo claro: el cian y el naranja de
+       marca son colores de superficie (2.2:1 y 3.4:1 sobre blanco). */
+    --color-brand-orange-ink: #c23400;   /* 5.2:1 sobre blanco */
+    --color-brand-cyan-ink: #00696b;     /* 5.1:1 sobre blanco */
+    /* Neutros de texto sobre superficie oscura (leaderboard proyectado). */
+    --color-brand-mute: #a8adb8;         /* 7.3:1 sobre brand-black */
+
     --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
     --font-display: "Audiowide", ui-sans-serif, cursive;
 }
@@ -67,9 +74,11 @@
     width: 100%;
 }
 
+/* Texto negro sobre cian: en blanco el par da 2.2:1 y no pasa AA. */
 .btn-primary {
     background-color: var(--color-brand-cyan);
-    color: #ffffff;
+    color: var(--color-brand-black);
+    font-weight: 700;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -110,6 +119,19 @@
     animation: heart-pop 400ms ease-out both;
 }
 
+/* Quien pida menos movimiento conserva el cambio de estado, sin el recorrido:
+   las animaciones se reducen a un ciclo instantáneo en vez de desaparecer. */
 @media (prefers-reduced-motion: reduce) {
     .heart-pop { animation: none; }
+
+    .animate-ping,
+    .animate-pulse,
+    .animate-spin {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    *, *::before, *::after {
+        transition-duration: 1ms !important;
+    }
 }

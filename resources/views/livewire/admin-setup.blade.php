@@ -2,11 +2,11 @@
     <!-- Navbar / Header con Logo y Navegación de Retorno -->
     <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
         <div class="flex items-center gap-4">
-            <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-10 w-auto">
-            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-light text-slate-700 uppercase tracking-wider">Admin</span>
+            <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" width="175" height="40" class="h-10 w-auto">
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-light text-brand-black uppercase tracking-wider">Admin</span>
         </div>
         <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-brand-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple transition-colors">
-            <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Volver al Dashboard
@@ -15,17 +15,17 @@
 
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
         <div class="px-6 py-8 border-b border-gray-200">
-            <h2 class="text-2xl font-display text-brand-black">Configuración Inicial de Agenda</h2>
+            <h1 class="text-2xl font-display text-brand-black">Configuración inicial de agenda</h1>
             <p class="mt-2 text-sm text-gray-600">Sube el archivo CSV o Excel con la programación del evento. Esto reemplazará la agenda actual.</p>
         </div>
 
         <div class="p-8">
             @if ($message)
-                <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-400 text-green-700 flex justify-between items-center">
+                <div class="mb-6 p-4 bg-brand-cyan/10 border-l-4 border-brand-cyan text-brand-cyan-ink flex justify-between items-center">
                     <div>
                         <p class="font-medium">{{ $message }}</p>
                     </div>
-                    <a href="{{ route('dashboard') }}" class="inline-flex items-center px-3 py-1.5 border border-green-600 text-xs font-semibold rounded-xl text-green-800 hover:bg-green-100 transition-colors">
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center px-3 py-1.5 border border-brand-cyan text-xs font-semibold rounded-xl text-brand-cyan-ink hover:bg-brand-cyan/20 transition-colors">
                         Volver al Dashboard &rarr;
                     </a>
                 </div>
@@ -51,7 +51,7 @@
                         class="flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-2xl cursor-pointer hover:border-brand-purple transition-colors duration-200"
                     >
                         <div class="space-y-1 text-center">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <svg class="mx-auto h-12 w-12 text-gray-600" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <div class="flex text-sm text-gray-600">
@@ -60,7 +60,7 @@
                                 </span>
                                 <p class="pl-1">o arrastra y suelta</p>
                             </div>
-                            <p class="text-xs text-gray-500">XLSX, CSV hasta 10MB</p>
+                            <p class="text-xs text-gray-600">XLSX, CSV hasta 10MB</p>
                             
                             @if ($file)
                                 <p class="mt-2 text-sm font-semibold text-brand-purple">{{ $file->getClientOriginalName() }}</p>

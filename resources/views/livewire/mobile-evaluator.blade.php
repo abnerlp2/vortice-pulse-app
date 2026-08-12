@@ -4,9 +4,7 @@
     @retry-offline-sync.window="retryPendingEvaluations()"
     class="max-w-md mx-auto min-h-screen bg-brand-light shadow-sm flex flex-col items-center justify-start w-full"
 >
-    <header class="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm py-3 px-4 flex justify-center items-center">
-        <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-8 w-auto">
-    </header>
+    <x-header />
 
     <div class="p-4 w-full flex-grow flex flex-col items-center justify-start">
         <template x-if="$store.vorticeCache.hasOfflinePending">
@@ -24,20 +22,20 @@
         x-transition:enter-end="opacity-100 transform scale-100"
         class="text-center p-6 space-y-4 w-full my-auto"
     >
-        <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-            <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <div class="w-16 h-16 mx-auto bg-brand-cyan/15 rounded-full flex items-center justify-center">
+            <svg aria-hidden="true" class="w-8 h-8 text-brand-cyan-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800">¡Gracias por tu evaluación!</h3>
-        <p class="text-gray-500">Tu respuesta ha sido registrada exitosamente.</p>
+        <h2 class="text-xl font-semibold text-brand-black">¡Gracias por tu evaluación!</h2>
+        <p class="text-gray-600">Tu respuesta ha sido registrada exitosamente.</p>
         <div class="pt-4">
-            <a href="/" class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-6 py-3 bg-brand-black hover:brightness-125 text-white font-semibold rounded-xl transition-colors shadow-md text-base">
+            <a href="/" class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-6 py-3 bg-brand-black hover:brightness-125 text-white font-semibold rounded-xl transition shadow-md text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2">
                 ← Volver a la Agenda
             </a>
         </div>
     </div>
 
     <!-- Estado: Formulario Activo -->
-    <div x-show="!$wire.hasSubmitted" x-transition.opacity.duration.300ms class="w-full space-y-6">
+    <div x-show="!$wire.hasSubmitted" x-cloak x-transition.opacity.duration.300ms class="w-full space-y-6">
         <div class="flex justify-start px-2">
             <a href="/" class="inline-flex items-center min-h-[44px] min-w-[44px] text-sm font-medium text-gray-600 hover:text-brand-black transition-colors">
                 ← Volver a la Agenda
@@ -45,32 +43,48 @@
         </div>
 
         <div class="text-center">
+            <h1 class="text-xl font-bold text-brand-black">{{ $talk?->title ?? 'Evaluar ponencia' }}</h1>
             @if(isset($talk) && $talk)
-                <h1 class="text-xl font-bold text-brand-black">{{ $talk->title }}</h1>
                 <p class="text-sm font-medium text-gray-600 mt-1">{{ $talk->speaker }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
+                <p class="text-xs text-gray-600 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
                 <div class="mt-2">
-                    <span class="inline-block text-xs font-semibold text-brand-purple bg-brand-purple/10 px-2.5 py-1 rounded-md">
-                        📍 {{ $talk->room ?: 'Por confirmar' }}
+                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-brand-purple bg-brand-purple/10 px-2.5 py-1 rounded-md">
+                        <svg aria-hidden="true" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/>
+                            <circle cx="12" cy="10" r="2.5"/>
+                        </svg>
+                        {{ $talk->room ?: 'Por confirmar' }}
                     </span>
                 </div>
             @endif
             <h2 class="text-2xl font-display text-brand-black mt-4">¿Qué te pareció esta charla?</h2>
-            <p class="text-gray-500 mt-1 text-sm">Toca un corazón para calificar</p>
+            <p class="text-gray-600 mt-1 text-sm">Toca un corazón para calificar</p>
         </div>
 
         <!-- Selector Táctil (Min 44x44px por elemento) -->
-        <div class="flex justify-between items-center px-4" x-data="{ hover: 0, popUntil: 0 }" @mouseleave="hover = 0">
+        <div
+            role="radiogroup"
+            aria-label="Calificación de la charla, de 1 a 5 corazones"
+            class="flex justify-between items-center px-4"
+            x-data="{ hover: 0, popUntil: 0 }"
+            @mouseleave="hover = 0"
+        >
             <template x-for="i in 5" :key="i">
                 <button
                     type="button"
+                    role="radio"
+                    :aria-checked="$wire.rating === i"
+                    :aria-label="`${i} de 5 corazones`"
+                    :tabindex="($wire.rating || 1) === i ? 0 : -1"
                     @click="$wire.set('rating', i); popUntil = 0; $nextTick(() => popUntil = i)"
+                    @keydown.arrow-right.prevent="$wire.set('rating', Math.min(($wire.rating || 0) + 1, 5)); $el.parentElement.querySelector(`[aria-label^='${Math.min(($wire.rating || 0), 5)} ']`)?.focus()"
+                    @keydown.arrow-left.prevent="$wire.set('rating', Math.max(($wire.rating || 1) - 1, 1)); $el.parentElement.querySelector(`[aria-label^='${Math.max(($wire.rating || 1), 1)} ']`)?.focus()"
                     @mouseenter="hover = i"
-                    class="w-14 h-14 flex items-center justify-center transition-colors touch-manipulation focus:outline-none"
-                    :class="(hover || $wire.rating) >= i ? 'text-brand-orange' : 'text-gray-300'"
-                    aria-label="Calificar con corazones"
+                    class="w-14 h-14 rounded-full flex items-center justify-center transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2"
+                    :class="(hover || $wire.rating) >= i ? 'text-brand-orange' : 'text-gray-400'"
                 >
                     <svg
+                        aria-hidden="true"
                         class="w-10 h-10 fill-current"
                         :class="popUntil >= i ? 'heart-pop' : ''"
                         :style="popUntil >= i ? `animation-delay: ${(i - 1) * 70}ms` : ''"
@@ -81,36 +95,42 @@
             </template>
         </div>
 
+        <p class="sr-only" aria-live="polite" x-text="$wire.rating ? `Calificación seleccionada: ${$wire.rating} de 5` : ''"></p>
+
         <!-- Mensajes de Error de Validación -->
         <div class="min-h-[1.5rem]">
-            @error('rating') 
-                <span x-transition.fade class="text-brand-orange text-sm block text-center font-medium">{{ $message }}</span> 
+            @error('rating')
+                <span role="alert" x-transition.fade class="text-brand-orange-ink text-sm block text-center font-medium">{{ $message }}</span>
             @enderror
-            @error('deviceSignature') 
-                <span x-transition.fade class="text-brand-orange text-sm block text-center font-medium">{{ $message }}</span> 
+            @error('deviceSignature')
+                <span role="alert" x-transition.fade class="text-brand-orange-ink text-sm block text-center font-medium">{{ $message }}</span>
             @enderror
         </div>
 
         <!-- Aspectos Cualitativos (Opcionales) -->
         <div class="space-y-4 px-4 text-left mt-6">
             <div>
-                <label class="block text-sm font-medium text-gray-700">¿Qué fue lo que más te gustó? (Opcional)</label>
-                <textarea wire:model="likedAspects" rows="2" class="mt-1 block w-full bg-white text-brand-black border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-2 focus:ring-brand-orange text-sm focus:outline-none"></textarea>
-                @error('likedAspects') <span class="text-brand-orange text-xs">{{ $message }}</span> @enderror
+                <label for="liked-aspects" class="block text-sm font-medium text-gray-700">¿Qué fue lo que más te gustó? (Opcional)</label>
+                <textarea id="liked-aspects" wire:model="likedAspects" rows="2"
+                    @error('likedAspects') aria-invalid="true" aria-describedby="liked-aspects-error" @enderror
+                    class="mt-1 block w-full bg-white text-brand-black border border-gray-300 rounded-xl p-3 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan text-sm"></textarea>
+                @error('likedAspects') <span id="liked-aspects-error" class="text-brand-orange-ink text-xs">{{ $message }}</span> @enderror
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">¿Qué mejorarías? (Opcional)</label>
-                <textarea wire:model="improvementAspects" rows="2" class="mt-1 block w-full bg-white text-brand-black border border-gray-300 rounded-xl p-3 shadow-sm focus:ring-2 focus:ring-brand-orange text-sm focus:outline-none"></textarea>
-                @error('improvementAspects') <span class="text-brand-orange text-xs">{{ $message }}</span> @enderror
+                <label for="improvement-aspects" class="block text-sm font-medium text-gray-700">¿Qué mejorarías? (Opcional)</label>
+                <textarea id="improvement-aspects" wire:model="improvementAspects" rows="2"
+                    @error('improvementAspects') aria-invalid="true" aria-describedby="improvement-aspects-error" @enderror
+                    class="mt-1 block w-full bg-white text-brand-black border border-gray-300 rounded-xl p-3 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan text-sm"></textarea>
+                @error('improvementAspects') <span id="improvement-aspects-error" class="text-brand-orange-ink text-xs">{{ $message }}</span> @enderror
             </div>
         </div>
 
         <!-- Botón de Envío -->
         <div class="pt-4">
-            <button 
-                type="button" 
+            <button
+                type="button"
                 @click="submitEvaluation()"
-                class="w-full h-14 bg-brand-orange hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center text-lg touch-manipulation"
+                class="w-full h-14 bg-brand-orange hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-black focus-visible:ring-offset-2 flex items-center justify-center text-lg touch-manipulation"
                 wire:loading.attr="disabled"
                 :disabled="isSubmitting"
             >
@@ -184,11 +204,17 @@
             },
 
             listenNetwork() {
-                window.addEventListener('online', () => {
+                const onOnline = () => {
                     if (this.$store.vorticeCache.pendingQueue.length > 0) {
                         this.processQueue();
                     }
-                });
+                };
+
+                window.addEventListener('online', onOnline);
+
+                // Sin esto, cada navegación con wire:navigate deja un listener vivo
+                // y la cola se procesa varias veces en paralelo.
+                this.$cleanup(() => window.removeEventListener('online', onOnline));
             },
 
             submitEvaluation() {
