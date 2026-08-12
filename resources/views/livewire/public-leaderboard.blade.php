@@ -38,10 +38,9 @@
 
                     <div class="flex-grow">
                         <h2 class="text-3xl font-bold">{{ $talk['title'] }}</h2>
-                        <div class="flex items-center gap-3 mt-1">
-                            <p class="text-xl text-gray-400">{{ $talk['speaker'] }}</p>
-                            <span class="text-xs font-semibold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-2.5 py-0.5 rounded-md">
-                                📍 {{ !empty($talk['room']) ? $talk['room'] : 'Por confirmar' }}
+                            <div class="flex flex-wrap items-center gap-3 mt-1">
+                                <p class="text-xl text-gray-400">{{ $talk['speaker'] }}</p>
+                                <p class="text-xs text-gray-500">{{ $talk['formatted_start_time'] }} - {{ $talk['formatted_end_time'] }}</p>
                             </span>
                         </div>
                     </div>

@@ -48,6 +48,7 @@
             @if(isset($talk) && $talk)
                 <h1 class="text-xl font-bold text-gray-900">{{ $talk->title }}</h1>
                 <p class="text-sm font-medium text-gray-600 mt-1">{{ $talk->speaker }}</p>
+                <p class="text-xs text-gray-500 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
                 <div class="mt-2">
                     <span class="inline-block text-xs font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md">
                         📍 {{ $talk->room ?: 'Por confirmar' }}

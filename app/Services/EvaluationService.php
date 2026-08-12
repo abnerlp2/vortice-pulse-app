@@ -8,7 +8,6 @@ class EvaluationService extends CoreEvaluationService
 {
     public function importAgendaFromCsv(string $filePath): bool
     {
-        // Implementation for CSV/XLSX import using maatwebsite/excel
-        return true;
+        return parent::importAgendaFromCsv($filePath);
     }
 }

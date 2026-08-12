@@ -33,7 +33,8 @@
                             <div>
                                 <h3 class="font-bold text-gray-900">{{ $talk->title }}</h3>
                                 <p class="text-sm text-gray-600">{{ $talk->speaker }}</p>
-                                <span class="inline-block mt-1 text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
+                                <p class="text-xs text-gray-500 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
+                                <span class="inline-block mt-2 text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
                                     📍 {{ $talk->room ?: 'Por confirmar' }}
                                 </span>
                             </div>

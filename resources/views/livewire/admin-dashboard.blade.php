@@ -62,6 +62,7 @@
                                         📍 {{ !empty($talk['room']) ? $talk['room'] : 'Por confirmar' }}
                                     </span>
                                 </p>
+                                <p class="text-xs text-slate-500 mt-1">{{ $talk['formatted_start_time'] }} - {{ $talk['formatted_end_time'] }}</p>
                                 <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors mt-0.5">{{ $talk['title'] }}</h3>
                             </div>
                             <div class="flex items-center gap-2">

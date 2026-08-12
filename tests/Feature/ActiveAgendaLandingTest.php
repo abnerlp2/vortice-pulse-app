@@ -30,8 +30,8 @@ class ActiveAgendaLandingTest extends TestCase
             'time_block_id' => $activeBlock->id,
             'title' => 'Active Talk',
             'speaker' => 'Speaker A',
-            'start_time' => $activeBlock->start_time,
-            'end_time' => $activeBlock->end_time,
+            'start_time' => now()->subMinutes(9),
+            'end_time' => now()->addMinutes(40),
         ]);
 
         $inactiveTalk = Talk::create([
@@ -47,6 +47,7 @@ class ActiveAgendaLandingTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Active Talk');
+        $response->assertSee($activeTalk->formatted_start_time . ' - ' . $activeTalk->formatted_end_time);
         $response->assertDontSee('Inactive Talk');
     }
 

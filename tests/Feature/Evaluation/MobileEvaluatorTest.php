@@ -26,6 +26,12 @@ beforeEach(function () {
     ]);
 });
 
+it('renders the talk time range in the evaluator header', function () {
+    Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
+        ->assertStatus(200)
+        ->assertSee($this->talk->formatted_start_time . ' - ' . $this->talk->formatted_end_time);
+});
+
 it('renders the mobile evaluator component successfully', function () {
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
         ->assertStatus(200);

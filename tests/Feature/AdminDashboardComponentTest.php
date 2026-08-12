@@ -20,8 +20,8 @@ beforeEach(function () {
         'title' => 'Admin Dashboard Realtime',
         'speaker' => 'Lucía Ramos',
         'time_block_id' => $this->timeBlock->id,
-        'start_time' => now()->subMinutes(10),
-        'end_time' => now()->addMinutes(10),
+        'start_time' => now()->setTime(9, 15),
+        'end_time' => now()->setTime(9, 45),
     ]);
 });
 
@@ -31,7 +31,8 @@ it('renders the admin dashboard component successfully and with clean header', f
         ->assertSee('Dashboard de Organización')
         ->assertDontSee('DESKTOP')
         ->assertSee('vortice-logo.svg')
-        ->assertSee('Promedio Actual');
+        ->assertSee('Promedio Actual')
+        ->assertSee($this->talk->formatted_start_time . ' - ' . $this->talk->formatted_end_time);
 });
 
 it('applies live event updates and displays a ranking alert banner', function () {

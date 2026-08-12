@@ -63,6 +63,8 @@ class AdminDashboard extends Component
                 'speaker' => $talk->speaker,
                 'room' => $talk->room,
                 'time_block_id' => $talk->time_block_id,
+                'formatted_start_time' => $talk->formatted_start_time,
+                'formatted_end_time' => $talk->formatted_end_time,
                 'end_time' => $talk->timeBlock?->end_time,
                 'average' => $average,
             ];

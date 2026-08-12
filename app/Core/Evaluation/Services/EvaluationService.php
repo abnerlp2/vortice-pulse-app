@@ -51,30 +51,25 @@ class EvaluationService
             throw new InvalidArgumentException("CSV file not found or not readable: {$filePath}");
         }
 
-        $content = trim(file_get_contents($filePath));
-        $content = str_replace(["\r\n", "\r"], "\n", $content);
-        $lines = explode("\n", $content);
+        $content = file_get_contents($filePath);
 
-        $firstLine = array_shift($lines);
-        $delimiter = strpos($firstLine, ';') !== false ? ';' : ',';
+        if ($content === false) {
+            throw new InvalidArgumentException("CSV file not found or not readable: {$filePath}");
+        }
 
-        $rawHeader = str_getcsv($firstLine, $delimiter);
-        $headers = array_map(fn ($col) => strtolower(trim(ltrim($col, "\xEF\xBB\xBF"))), $rawHeader);
+        $content = trim(str_replace(["\r\n", "\r"], "\n", $content));
+        $lines = array_filter(array_map('trim', explode("\n", $content)), fn ($line) => $line !== '');
 
-        $rows = [];
+        if (empty($lines)) {
+            throw new InvalidArgumentException('The CSV file does not contain any valid rows.');
+        }
 
-        foreach ($lines as $line) {
-            if (trim($line) === '') {
-                continue;
-            }
+        $headerLine = array_shift($lines);
+        $delimiter = strpos($headerLine, ';') !== false ? ';' : ',';
+        [$headers, $rows] = $this->parseCsvRows($headerLine, $lines, $delimiter);
 
-            $row = str_getcsv($line, $delimiter);
-
-            if (count($row) !== count($headers)) {
-                continue;
-            }
-
-            $rows[] = array_combine($headers, $row);
+        if (empty($rows)) {
+            [$headers, $rows] = $this->parseCsvRows($headerLine, $lines, $delimiter === ';' ? ',' : ';');
         }
 
         if (empty($rows)) {
@@ -159,6 +154,25 @@ class EvaluationService
         return true;
     }
 
+    private function parseCsvRows(string $headerLine, array $lines, string $delimiter): array
+    {
+        $rawHeader = str_getcsv($headerLine, $delimiter);
+        $headers = array_map([$this, 'normalizeCsvHeader'], $rawHeader);
+        $rows = [];
+
+        foreach ($lines as $line) {
+            $row = array_map('trim', str_getcsv($line, $delimiter));
+
+            if (count($row) !== count($headers)) {
+                continue;
+            }
+
+            $rows[] = array_combine($headers, $row);
+        }
+
+        return [$headers, $rows];
+    }
+
     /**
      * Normalize CSV headers by removing UTF-8 BOM and converting values to canonical snake_case.
      *
@@ -186,14 +200,18 @@ class EvaluationService
     private function getCsvValue(array $row, array $candidates, bool $required = true): ?string
     {
         foreach ($candidates as $candidate) {
-            if (array_key_exists($candidate, $row) && $row[$candidate] !== null) {
-                $value = trim((string) $row[$candidate]);
+            $normalizedCandidate = $this->normalizeCsvHeader($candidate);
 
-                if ($value === '' && !$required) {
-                    return null;
+            foreach ([$candidate, $normalizedCandidate] as $key) {
+                if (array_key_exists($key, $row) && $row[$key] !== null) {
+                    $value = trim((string) $row[$key]);
+
+                    if ($value === '' && !$required) {
+                        return null;
+                    }
+
+                    return $value;
                 }
-
-                return $value;
             }
         }
 

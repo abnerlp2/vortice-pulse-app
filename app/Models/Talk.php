@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -55,6 +56,16 @@ class Talk extends Model
             'start_time' => 'datetime',
             'end_time' => 'datetime',
         ];
+    }
+
+    public function getFormattedStartTimeAttribute(): string
+    {
+        return Carbon::parse($this->start_time)->format('g:i a');
+    }
+
+    public function getFormattedEndTimeAttribute(): string
+    {
+        return Carbon::parse($this->end_time)->format('g:i a');
     }
 
     /**

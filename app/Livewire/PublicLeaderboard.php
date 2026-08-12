@@ -32,6 +32,8 @@ class PublicLeaderboard extends Component
                 'title' => $talk->title,
                 'speaker' => $talk->speaker,
                 'room' => $talk->room,
+                'formatted_start_time' => $talk->formatted_start_time,
+                'formatted_end_time' => $talk->formatted_end_time,
                 'average' => $average,
             ];
         })->toArray();
