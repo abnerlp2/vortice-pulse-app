@@ -108,6 +108,15 @@
 
 ---
 
+## Phase 7: Add Time Information to Talks
+
+**Purpose**: Make visible the start and end time for each talk
+
+- [x] T020 [P] Crear prueba unitaria en PEST para validar que el modelo `Talk` convierte y expone `start_time` y `end_time` al formato amigable (ej. 9:00 am).
+- [x] T021 Implementar los Accessors `formatted_start_time` y `formatted_end_time` en `app/Models/Talk.php` utilizando Carbon.
+- [x] T022 [P] Crear/actualizar pruebas de integración en PEST asegurando que el rango de horas (inicio - fin) sea visible en el renderizado de los componentes Livewire.
+- [x] T023 Actualizar las vistas Blade (`active-agenda-landing`, `mobile-evaluator`, `public-leaderboard` y `admin-dashboard`) para hacer visible la información del rango de horas, manteniendo los estándares de diseño Mobile-First.
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
