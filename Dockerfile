@@ -11,11 +11,16 @@ ARG VITE_REVERB_SCHEME=https
 RUN npm run build
 
 # --- app: nginx + php-fpm + reverb + queue worker (todo bajo s6) ---
-FROM serversideup/php:8.3-fpm-nginx
+FROM serversideup/php:8.4-fpm-nginx
 ENV AUTORUN_ENABLED=true \
     AUTORUN_LARAVEL_MIGRATION=true \
     AUTORUN_LARAVEL_STORAGE_LINK=false \
     PHP_OPCACHE_ENABLE=1
+
+# gd lo exige phpoffice/phpspreadsheet (maatwebsite/excel).
+USER root
+RUN install-php-extensions gd
+USER www-data
 
 WORKDIR /var/www/html
 COPY --chown=www-data:www-data composer.json composer.lock ./
