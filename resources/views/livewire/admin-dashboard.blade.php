@@ -328,20 +328,20 @@
             </div>
         </div>
     @endif
+
+    <script>
+        document.addEventListener('livewire:initialized', function () {
+            if (!window.Echo || typeof window.Echo.channel !== 'function') {
+                return;
+            }
+
+            window.Echo.channel('modules.dashboard')
+                .listen('.evaluation.received', function (event) {
+                    @this.call('onEvaluationReceived', event);
+                })
+                .listen('.ranking.order.altered', function (event) {
+                    @this.call('onRankingOrderAltered', event);
+                });
+        });
+    </script>
 </div>
-
-<script>
-    document.addEventListener('livewire:initialized', function () {
-        if (!window.Echo || typeof window.Echo.channel !== 'function') {
-            return;
-        }
-
-        window.Echo.channel('modules.dashboard')
-            .listen('.evaluation.received', function (event) {
-                @this.call('onEvaluationReceived', event);
-            })
-            .listen('.ranking.order.altered', function (event) {
-                @this.call('onRankingOrderAltered', event);
-            });
-    });
-</script>

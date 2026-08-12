@@ -73,3 +73,11 @@
 - [x] T025 [P] [US5] Enmarcar el logotipo oficial de Vórtice 2026 dentro de un contenedor/badge claro (`bg-white/95 px-4 py-2 rounded-xl shadow-md inline-block`) en `resources/views/livewire/public-leaderboard.blade.php` para alto contraste sobre el fondo oscuro y eliminar títulos de texto duplicados.
 - [x] T026 [US5] Crear y ejecutar la suite de pruebas PEST en `tests/Feature/` para verificar la segregación de layouts, los botones de retorno en ambas pantallas móviles y la visibilidad del logo público.
 - [x] T027 [P] [US5] Estandarizar las clases de bordes redondeados Tailwind en todas las vistas Blade (`resources/views/`): aplicar `rounded-2xl` a tarjetas contenedoras y `rounded-xl` a botones e insumos de texto para homogeneizar el sistema de diseño.
+
+---
+
+## Phase 7: Convergence & Bug Fixes
+
+**Objective**: Corregir inconsistencias de renderizado en tiempo de ejecución y estabilizar componentes Livewire.
+
+- [x] T028 [P] Corregir la estructura DOM en `resources/views/livewire/admin-dashboard.blade.php` envolviendo todo el contenido y scripts dentro de un único nodo raíz maestro en cumplimiento de la Regla del Nodo Raíz de Livewire v4 para eliminar la pantalla blanca silenciosa en el dashboard de administración, y purgar cachés de vistas con Artisan.
