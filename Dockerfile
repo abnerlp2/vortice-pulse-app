@@ -28,7 +28,11 @@ RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --opti
 
 COPY --chown=www-data:www-data . .
 COPY --from=assets --chown=www-data:www-data /app/public/build ./public/build
-RUN composer dump-autoload --optimize
+# .dockerignore excluye estos directorios (solo traen basura de caché), pero
+# Laravel los necesita presentes y escribibles.
+RUN mkdir -p bootstrap/cache storage/framework/cache/data storage/framework/sessions \
+             storage/framework/views storage/logs \
+    && composer dump-autoload --optimize
 
 USER root
 COPY docker/s6-rc.d/ /etc/s6-overlay/s6-rc.d/
