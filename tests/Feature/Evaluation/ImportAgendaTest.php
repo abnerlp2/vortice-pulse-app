@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Evaluation\Services\EvaluationService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -57,4 +58,28 @@ it('rolls back database transaction if payload is invalid or corrupt', function 
     // Aserción de transaccionalidad: La base de datos debe estar intacta (sin inserciones parciales)
     expect(DB::table('time_blocks')->count())->toBe(0);
     expect(DB::table('talks')->count())->toBe(0);
+});
+
+it('imports csv using Spanish time headers', function () {
+    $csv = implode("\n", [
+        'id;titulo;conferencista;sala;time_block_id;Hora Inicio;Hora Fin;time_block_start_time;time_block_end_time',
+        'talk-1;Keynote;Alice;Sala Principal;block-1;2026-08-12 09:00:00;2026-08-12 09:45:00;2026-08-12 09:00:00;2026-08-12 10:00:00',
+    ]);
+
+    $path = tempnam(sys_get_temp_dir(), 'agenda_csv_');
+    file_put_contents($path, $csv);
+
+    try {
+        $service = new EvaluationService();
+
+        expect($service->importAgendaFromCsv($path))->toBeTrue();
+
+        expect(DB::table('time_blocks')->count())->toBe(1);
+        expect(DB::table('talks')->count())->toBe(1);
+        expect(DB::table('talks')->where('title', 'Keynote')->where('speaker', 'Alice')->exists())->toBeTrue();
+        expect(DB::table('talks')->where('title', 'Keynote')->value('start_time'))->toBe('2026-08-12 09:00:00');
+        expect(DB::table('talks')->where('title', 'Keynote')->value('end_time'))->toBe('2026-08-12 09:45:00');
+    } finally {
+        unlink($path);
+    }
 });

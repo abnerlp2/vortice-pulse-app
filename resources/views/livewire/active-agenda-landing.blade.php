@@ -33,6 +33,9 @@
                             <div>
                                 <h3 class="font-bold text-gray-900">{{ $talk->title }}</h3>
                                 <p class="text-sm text-gray-600">{{ $talk->speaker }}</p>
+                                <span class="inline-block mt-1 text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
+                                    📍 {{ $talk->room ?: 'Por confirmar' }}
+                                </span>
                             </div>
                             <div class="flex items-center justify-center w-11 h-11 bg-indigo-50 rounded-full text-indigo-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

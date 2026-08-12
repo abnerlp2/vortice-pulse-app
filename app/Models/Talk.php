@@ -39,6 +39,7 @@ class Talk extends Model
         'time_block_id',
         'title',
         'speaker',
+        'room',
         'start_time',
         'end_time',
     ];

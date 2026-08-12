@@ -45,8 +45,17 @@
         </div>
 
         <div class="text-center">
-            <h2 class="text-2xl font-bold text-gray-800">¿Qué te pareció esta charla?</h2>
-            <p class="text-gray-500 mt-2 text-sm">Toca un corazón para calificar</p>
+            @if(isset($talk) && $talk)
+                <h1 class="text-xl font-bold text-gray-900">{{ $talk->title }}</h1>
+                <p class="text-sm font-medium text-gray-600 mt-1">{{ $talk->speaker }}</p>
+                <div class="mt-2">
+                    <span class="inline-block text-xs font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md">
+                        📍 {{ $talk->room ?: 'Por confirmar' }}
+                    </span>
+                </div>
+            @endif
+            <h2 class="text-2xl font-bold text-gray-800 mt-4">¿Qué te pareció esta charla?</h2>
+            <p class="text-gray-500 mt-1 text-sm">Toca un corazón para calificar</p>
         </div>
 
         <!-- Selector Táctil (Min 44x44px por elemento) -->

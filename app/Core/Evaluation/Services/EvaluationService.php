@@ -6,7 +6,11 @@ use InvalidArgumentException;
 use JsonException;
 use App\Core\Evaluation\Contracts\EvaluationRepositoryInterface;
 use App\Core\Evaluation\Exceptions\OutOfTimeBlockException;
+use App\Models\Talk;
+use App\Models\TimeBlock;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class EvaluationService
@@ -33,6 +37,171 @@ class EvaluationService
             $repository->saveTimeBlocks($parsed['time_blocks']);
             $repository->saveTalks($parsed['talks']);
         });
+    }
+
+    /**
+     * Import agenda data from a CSV file and persist it into the database.
+     *
+     * @param string $filePath
+     * @return bool
+     */
+    public function importAgendaFromCsv(string $filePath): bool
+    {
+        if (!is_readable($filePath)) {
+            throw new InvalidArgumentException("CSV file not found or not readable: {$filePath}");
+        }
+
+        $content = trim(file_get_contents($filePath));
+        $content = str_replace(["\r\n", "\r"], "\n", $content);
+        $lines = explode("\n", $content);
+
+        $firstLine = array_shift($lines);
+        $delimiter = strpos($firstLine, ';') !== false ? ';' : ',';
+
+        $rawHeader = str_getcsv($firstLine, $delimiter);
+        $headers = array_map(fn ($col) => strtolower(trim(ltrim($col, "\xEF\xBB\xBF"))), $rawHeader);
+
+        $rows = [];
+
+        foreach ($lines as $line) {
+            if (trim($line) === '') {
+                continue;
+            }
+
+            $row = str_getcsv($line, $delimiter);
+
+            if (count($row) !== count($headers)) {
+                continue;
+            }
+
+            $rows[] = array_combine($headers, $row);
+        }
+
+        if (empty($rows)) {
+            throw new InvalidArgumentException('The CSV file does not contain any valid rows.');
+        }
+
+        $repository = $this->repository ?? app(EvaluationRepositoryInterface::class);
+
+        DB::transaction(function () use ($rows, $repository) {
+            $repository->clearAgenda();
+
+            foreach ($rows as $index => $row) {
+                $title = trim((string) $this->getCsvValue($row, ['title', 'título', 'titulo']));
+                $speaker = trim((string) $this->getCsvValue($row, ['speaker', 'conferencista']));
+                $room = $this->getCsvValue($row, ['room', 'sala', 'auditorio', 'ubicacion'], false);
+                $timeBlockId = trim((string) ($row['time_block_id'] ?? $row['time_block'] ?? $row['block'] ?? ''));
+                $talkStart = trim((string) $this->getCsvValue($row, ['hora inicio', 'start_time', 'start time', 'hora_inicio']));
+                $talkEnd = trim((string) $this->getCsvValue($row, ['hora fin', 'end_time', 'end time', 'hora_fin']));
+                $blockStart = trim((string) ($row['time_block_start_time'] ?? $row['block_start_time'] ?? $row['time_block_start'] ?? ''));
+                $blockEnd = trim((string) ($row['time_block_end_time'] ?? $row['block_end_time'] ?? $row['time_block_end'] ?? ''));
+
+                if ($title === '' || $speaker === '' || $timeBlockId === '' || $talkStart === '' || $talkEnd === '') {
+                    throw new InvalidArgumentException(sprintf('CSV row %d is missing required talk fields.', $index + 1));
+                }
+
+                try {
+                    $talkStartDateTime = \Carbon\Carbon::parse($talkStart);
+                    $talkEndDateTime = \Carbon\Carbon::parse($talkEnd);
+                } catch (\Throwable $e) {
+                    throw new InvalidArgumentException(sprintf('CSV row %d contains an invalid talk time range.', $index + 1), 0, $e);
+                }
+
+                if ($talkEndDateTime->lte($talkStartDateTime)) {
+                    throw new InvalidArgumentException(sprintf('CSV row %d has an invalid talk time range.', $index + 1));
+                }
+
+                $blockStartValue = $blockStart !== '' ? $blockStart : $talkStart;
+                $blockEndValue = $blockEnd !== '' ? $blockEnd : $talkEnd;
+
+                try {
+                    $blockStartDateTime = \Carbon\Carbon::parse($blockStartValue);
+                    $blockEndDateTime = \Carbon\Carbon::parse($blockEndValue);
+                } catch (\Throwable $e) {
+                    throw new InvalidArgumentException(sprintf('CSV row %d contains an invalid block time range.', $index + 1), 0, $e);
+                }
+
+                if ($blockEndDateTime->lte($blockStartDateTime)) {
+                    throw new InvalidArgumentException(sprintf('CSV row %d has an invalid block time range.', $index + 1));
+                }
+
+                if ($talkStartDateTime->lt($blockStartDateTime) || $talkEndDateTime->gt($blockEndDateTime)) {
+                    throw new InvalidArgumentException(sprintf('CSV row %d has a talk outside its time block.', $index + 1));
+                }
+
+                $timeBlock = TimeBlock::firstOrCreate(
+                    ['id' => $timeBlockId],
+                    [
+                        'start_time' => $blockStartDateTime->format('Y-m-d H:i:s'),
+                        'end_time' => $blockEndDateTime->format('Y-m-d H:i:s'),
+                    ]
+                );
+
+                $talkUuid = (string) Str::uuid();
+
+                Talk::create([
+                    'id' => $talkUuid,
+                    'title' => $title,
+                    'speaker' => $speaker,
+                    'room' => $room,
+                    'time_block_id' => $timeBlock->id,
+                    'start_time' => $talkStartDateTime->format('Y-m-d H:i:s'),
+                    'end_time' => $talkEndDateTime->format('Y-m-d H:i:s'),
+                ]);
+
+                Cache::forget("vortice:pulse:talk:{$talkUuid}");
+            }
+        });
+
+        Cache::forget('vortice:time_blocks:active');
+        Cache::forget('vortice:talks:all');
+
+        return true;
+    }
+
+    /**
+     * Normalize CSV headers by removing UTF-8 BOM and converting values to canonical snake_case.
+     *
+     * @param string|null $header
+     * @return string
+     */
+    private function normalizeCsvHeader(?string $header): string
+    {
+        $value = (string) $header;
+        $value = trim(ltrim($value, "\xEF\xBB\xBF"));
+        $value = mb_strtolower($value);
+        $value = str_replace([' ', '-', '.', '/'], '_', $value);
+
+        return trim($value, '_');
+    }
+
+    /**
+     * Retrieve a CSV row value by matching against a list of possible header names.
+     *
+     * @param array<string, mixed> $row
+     * @param array<int, string> $candidates
+     * @param bool $required
+     * @return string|null
+     */
+    private function getCsvValue(array $row, array $candidates, bool $required = true): ?string
+    {
+        foreach ($candidates as $candidate) {
+            if (array_key_exists($candidate, $row) && $row[$candidate] !== null) {
+                $value = trim((string) $row[$candidate]);
+
+                if ($value === '' && !$required) {
+                    return null;
+                }
+
+                return $value;
+            }
+        }
+
+        if ($required) {
+            return '';
+        }
+
+        return null;
     }
 
     /**
@@ -252,10 +421,13 @@ class EvaluationService
                 throw new InvalidArgumentException(sprintf('talks[%d] falls outside its time block.', $index));
             }
 
+            $room = isset($talk['room']) && is_string($talk['room']) ? $talk['room'] : null;
+
             $talks[] = [
                 'id' => $id,
                 'title' => $title,
                 'speaker' => $speaker,
+                'room' => $room,
                 'time_block_id' => $timeBlockId,
                 'start_time' => date('Y-m-d H:i:s', $startTimestamp),
                 'end_time' => date('Y-m-d H:i:s', $endTimestamp),

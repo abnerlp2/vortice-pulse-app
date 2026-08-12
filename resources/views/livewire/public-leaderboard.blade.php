@@ -38,7 +38,12 @@
 
                     <div class="flex-grow">
                         <h2 class="text-3xl font-bold">{{ $talk['title'] }}</h2>
-                        <p class="text-xl text-gray-400">{{ $talk['speaker'] }}</p>
+                        <div class="flex items-center gap-3 mt-1">
+                            <p class="text-xl text-gray-400">{{ $talk['speaker'] }}</p>
+                            <span class="text-xs font-semibold text-indigo-300 bg-indigo-900/60 border border-indigo-700/50 px-2.5 py-0.5 rounded-md">
+                                📍 {{ !empty($talk['room']) ? $talk['room'] : 'Por confirmar' }}
+                            </span>
+                        </div>
                     </div>
 
                     <div class="flex items-center space-x-12">

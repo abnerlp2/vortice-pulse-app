@@ -64,6 +64,10 @@ class MobileEvaluator extends Component
 
     public function render()
     {
-        return view('livewire.mobile-evaluator')->layout('components.layouts.app');
+        $talk = \App\Models\Talk::find($this->talkId);
+
+        return view('livewire.mobile-evaluator', [
+            'talk' => $talk,
+        ])->layout('components.layouts.app');
     }
 }

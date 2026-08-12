@@ -31,6 +31,7 @@ class AdminDashboard extends Component
     public string $editTitle = '';
     public string $editSpeaker = '';
     public string $editSpeakers = '';
+    public ?string $editRoom = null;
     public string $editTimeBlockId = '';
     public array $availableTimeBlocks = [];
 
@@ -60,6 +61,7 @@ class AdminDashboard extends Component
                 'id' => $talk->id,
                 'title' => $talk->title,
                 'speaker' => $talk->speaker,
+                'room' => $talk->room,
                 'time_block_id' => $talk->time_block_id,
                 'end_time' => $talk->timeBlock?->end_time,
                 'average' => $average,
@@ -86,6 +88,7 @@ class AdminDashboard extends Component
         $this->editTitle = $talk->title;
         $this->editSpeaker = $talk->speaker;
         $this->editSpeakers = $talk->speaker;
+        $this->editRoom = $talk->room;
         $this->editTimeBlockId = $talk->time_block_id;
         $this->availableTimeBlocks = TimeBlock::all()->toArray();
         $this->showEditModal = true;
@@ -106,6 +109,7 @@ class AdminDashboard extends Component
         $this->validate([
             'editTitle' => 'required|string|min:1|max:255',
             'editSpeaker' => 'required|string|min:1|max:255',
+            'editRoom' => 'nullable|string|max:255',
             'editTimeBlockId' => 'required|string|exists:time_blocks,id',
         ], [
             'editTitle.required' => 'El título es obligatorio.',
@@ -122,6 +126,7 @@ class AdminDashboard extends Component
         $talk->update([
             'title' => $this->editTitle,
             'speaker' => $this->editSpeaker,
+            'room' => $this->editRoom ?: null,
             'time_block_id' => $this->editTimeBlockId,
         ]);
 
@@ -133,7 +138,7 @@ class AdminDashboard extends Component
         $this->showEditModal = false;
         $this->editingTalkId = null;
         $this->resetValidation();
-        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editTimeBlockId']);
+        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editRoom', 'editTimeBlockId']);
     }
 
     public function cancelEdit(): void
@@ -141,7 +146,7 @@ class AdminDashboard extends Component
         $this->showEditModal = false;
         $this->editingTalkId = null;
         $this->resetValidation();
-        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editTimeBlockId']);
+        $this->reset(['editTitle', 'editSpeaker', 'editSpeakers', 'editRoom', 'editTimeBlockId']);
     }
 
     public function render()

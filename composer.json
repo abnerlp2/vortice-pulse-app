@@ -11,6 +11,7 @@
     "require": {
         "laravel/framework": "^11.0",
         "laravel/reverb": "^1.10",
+        "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.3",
         "maatwebsite/excel": "*",
         "predis/predis": "^3.5"
@@ -61,6 +62,9 @@
             "advisories": {
                 "block": false
             }
+        },
+        "platform": {
+            "php": "8.3.0"
         }
     }
 }
