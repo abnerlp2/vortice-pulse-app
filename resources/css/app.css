@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Corazones del evaluador: rebote en cascada al calificar. */
+@keyframes heart-pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+.heart-pop {
+    animation: heart-pop 400ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heart-pop { animation: none; }
+}
