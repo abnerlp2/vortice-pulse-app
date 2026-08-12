@@ -2,9 +2,12 @@
     wire:poll.30s
     x-data
     x-init="
-        window.Echo?.channel('modules.dashboard')
-            .listen('.evaluation.received', () => $wire.$refresh())
-            .listen('.ranking.order.altered', () => $wire.$refresh());
+        const channel = window.Echo?.channel('modules.dashboard');
+        channel?.listen('.evaluation.received', () => $wire.$refresh())
+                .listen('.ranking.order.altered', () => $wire.$refresh());
+        document.addEventListener('livewire:navigating', () => {
+            channel?.stopListening('.evaluation.received').stopListening('.ranking.order.altered');
+        }, { once: true });
     "
     class="max-w-4xl mx-auto p-6 bg-brand-card shadow-xl rounded-2xl"
 >

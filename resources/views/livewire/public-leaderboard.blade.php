@@ -27,7 +27,7 @@
                     $rank = $index + 1;
                 @endphp
 
-                <div class="relative bg-white/[0.06] rounded-2xl p-6 lg:p-8 flex flex-col md:flex-row md:items-center gap-6 transition-all duration-500 border border-white/10 shadow-2xl">
+                <div wire:key="podium-{{ $talkId }}" class="relative bg-white/[0.06] rounded-2xl p-6 lg:p-8 flex flex-col md:flex-row md:items-center gap-6 transition-all duration-500 border border-white/10 shadow-2xl">
 
                     <div class="flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 bg-brand-purple/25 rounded-full flex items-center justify-center text-3xl font-black text-white">
                         {{ $rank }}
@@ -57,7 +57,7 @@
                     </div>
 
                     @if($rank <= 3)
-                        <div class="absolute -top-2 -right-2 bg-brand-orange text-white text-xs font-black px-3 py-1 rounded-full uppercase">
+                        <div class="absolute -top-2 -right-2 bg-brand-orange text-brand-black text-xs font-black px-3 py-1 rounded-full uppercase">
                             Top {{ $rank }}
                         </div>
                     @endif

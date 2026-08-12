@@ -122,16 +122,9 @@
 /* Quien pida menos movimiento conserva el cambio de estado, sin el recorrido:
    las animaciones se reducen a un ciclo instantáneo en vez de desaparecer. */
 @media (prefers-reduced-motion: reduce) {
-    .heart-pop { animation: none; }
-
-    .animate-ping,
-    .animate-pulse,
-    .animate-spin {
+    *, *::before, *::after {
         animation-duration: 1ms !important;
         animation-iteration-count: 1 !important;
-    }
-
-    *, *::before, *::after {
         transition-duration: 1ms !important;
     }
 }

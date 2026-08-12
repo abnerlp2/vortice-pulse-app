@@ -29,10 +29,13 @@ test('admin can login with correct password', function () {
 });
 
 test('admin cannot login with incorrect password', function () {
+    // Vuelve al formulario con el error: expulsar al home público perdía el
+    // contexto de quien solo se equivocó de contraseña.
     $this->post('/admin/login', [
         'password' => 'wrong-password',
     ])
-        ->assertRedirect('/')
+        ->assertRedirect('/admin/login')
+        ->assertSessionHas('error')
         ->assertSessionMissing('admin_authenticated');
 });
 

@@ -32,7 +32,7 @@
             @endif
 
             @if ($error)
-                <div class="mb-6 p-4 bg-brand-orange/10 border-l-4 border-brand-orange text-brand-orange">
+                <div class="mb-6 p-4 bg-brand-orange/10 border-l-4 border-brand-orange text-brand-orange-ink">
                     <p class="font-medium">{{ $error }}</p>
                 </div>
             @endif
@@ -69,7 +69,7 @@
                         <input id="file-upload" wire:model="file" type="file" class="sr-only">
                     </label>
                     
-                    @error('file') <span class="mt-2 text-sm text-brand-orange">{{ $message }}</span> @enderror
+                    @error('file') <span class="mt-2 text-sm text-brand-orange-ink">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="flex items-center justify-between">

@@ -50,9 +50,15 @@
 
             <div class="grid gap-6 grid-cols-1 md:grid-cols-2">
                 @foreach($talks as $talk)
-                    <div 
+                    <div
+                        wire:key="talk-card-{{ $talk['id'] }}"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Ver feedback cualitativo de {{ $talk['title'] }}"
                         wire:click="loadQualitativeData('{{ $talk['id'] }}')"
-                        class="rounded-2xl bg-white p-5 shadow-sm border border-gray-200 hover:border-brand-cyan/30 hover:shadow-md transition-all cursor-pointer group"
+                        wire:keydown.enter="loadQualitativeData('{{ $talk['id'] }}')"
+                        wire:keydown.space.prevent="loadQualitativeData('{{ $talk['id'] }}')"
+                        class="rounded-2xl bg-white p-5 shadow-sm border border-gray-200 hover:border-brand-cyan/30 hover:shadow-md transition-all cursor-pointer group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2"
                     >
                         <div class="flex items-start justify-between gap-2 mb-4">
                             <div>
@@ -107,7 +113,7 @@
                 @if(count($podiumOrder) > 0)
                     <ol class="space-y-3">
                         @foreach($podiumOrder as $position => $talkId)
-                            <li class="flex items-center gap-3 p-3 rounded-2xl bg-brand-light border border-gray-100 text-brand-black">
+                            <li wire:key="podium-{{ $talkId }}" class="flex items-center gap-3 p-3 rounded-2xl bg-brand-light border border-gray-100 text-brand-black">
                                 <span class="flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold {{ $loop->first ? 'bg-brand-orange/10 text-brand-orange-ink' : 'bg-gray-200 text-brand-black' }}">
                                     {{ $loop->iteration }}
                                 </span>
@@ -119,7 +125,7 @@
                     <p class="text-xs text-gray-600 uppercase tracking-wider font-medium mb-3">Preview Estático de Ponencias</p>
                     <div class="space-y-2">
                         @foreach($talks as $talk)
-                            <div class="rounded-2xl border border-gray-100 p-3 bg-brand-light text-brand-black">
+                            <div wire:key="preview-{{ $talk['id'] }}" class="rounded-2xl border border-gray-100 p-3 bg-brand-light text-brand-black">
                                 <p class="text-xs font-medium text-gray-600">{{ $talk['speaker'] }}</p>
                                 <p class="text-sm font-semibold text-brand-black mt-0.5">{{ $talk['title'] }}</p>
                             </div>
@@ -133,6 +139,8 @@
     <!-- Qualitative Slide-over (T012) -->
     <div 
         x-show="open" 
+        x-trap.noscroll="open"
+        @keydown.escape.window="open = false"
         class="fixed inset-0 overflow-hidden z-50" 
         aria-labelledby="slide-over-title" 
         role="dialog" 
@@ -164,14 +172,14 @@
                     x-transition:leave-end="translate-x-full"
                     class="pointer-events-auto w-screen max-w-2xl"
                 >
-                    <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                    <div class="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                         <div class="px-4 py-6 sm:px-6 border-b border-gray-100">
                             <div class="flex items-start justify-between">
                                 <h2 class="text-xl font-bold text-brand-black" id="slide-over-title">
                                     Feedback Cualitativo: {{ $talkTitles[$selectedTalkId] ?? '' }}
                                 </h2>
                                 <div class="ml-3 flex h-7 items-center">
-                                    <button @click="open = false" class="rounded-xl bg-white text-gray-600 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
+                                    <button @click="open = false" class="rounded-xl bg-white text-gray-600 hover:text-brand-black focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
                                         <span class="sr-only">Cerrar panel</span>
                                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -224,6 +232,11 @@
         <div 
             x-data="{ show: @entangle('showEditModal') }"
             x-show="show" 
+            x-trap.noscroll="show"
+            @keydown.escape.window="$wire.cancelEdit()"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-modal-title"
             class="fixed inset-0 z-50 overflow-y-auto"
             x-cloak
         >
@@ -253,7 +266,7 @@
                     <form wire:submit.prevent="updateTalk">
                         <div class="bg-white px-6 pt-6 pb-4">
                             <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-                                <h3 class="text-xl font-bold text-brand-black">Editar Charla</h3>
+                                <h3 id="edit-modal-title" class="text-xl font-bold text-brand-black">Editar charla</h3>
                                 <button type="button" wire:click="cancelEdit" class="text-gray-600 hover:text-brand-black rounded-xl p-2 min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan">
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                 </button>
@@ -266,7 +279,7 @@
                                         type="text" 
                                         id="editTitle" 
                                         wire:model="editTitle" 
-                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan/30 focus:ring-brand-cyan text-sm @error('editTitle') border-brand-orange @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan text-sm @error('editTitle') border-brand-orange @enderror"
                                         placeholder="Ingrese el título"
                                     >
                                     @error('editTitle')
@@ -280,7 +293,7 @@
                                         type="text" 
                                         id="editSpeaker" 
                                         wire:model="editSpeaker" 
-                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan/30 focus:ring-brand-cyan text-sm @error('editSpeaker') border-brand-orange @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan text-sm @error('editSpeaker') border-brand-orange @enderror"
                                         placeholder="Nombre del conferencista"
                                     >
                                     @error('editSpeaker')
@@ -294,7 +307,7 @@
                                         type="text" 
                                         id="editRoom" 
                                         wire:model="editRoom" 
-                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan/30 focus:ring-brand-cyan text-sm @error('editRoom') border-brand-orange @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan text-sm @error('editRoom') border-brand-orange @enderror"
                                         placeholder="Ej. Auditorio Principal, Sala A"
                                     >
                                     @error('editRoom')
@@ -307,7 +320,7 @@
                                     <select 
                                         id="editTimeBlockId" 
                                         wire:model="editTimeBlockId" 
-                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan/30 focus:ring-brand-cyan text-sm @error('editTimeBlockId') border-brand-orange @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-gray-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan text-sm @error('editTimeBlockId') border-brand-orange @enderror"
                                     >
                                         <option value="">Seleccione un bloque</option>
                                         @foreach($availableTimeBlocks as $block)
@@ -334,7 +347,7 @@
                             <button 
                                 type="submit" 
                                 wire:loading.attr="disabled"
-                                class="inline-flex items-center justify-center rounded-xl border border-transparent bg-brand-cyan px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-110 transition-colors disabled:opacity-50"
+                                class="inline-flex items-center justify-center rounded-xl border border-transparent bg-brand-cyan px-4 py-2 text-sm font-bold text-brand-black shadow-sm hover:brightness-110 transition-colors disabled:opacity-50"
                             >
                                 <span wire:loading.remove wire:target="updateTalk">Guardar Cambios</span>
                                 <span wire:loading wire:target="updateTalk" class="flex items-center gap-2">
@@ -349,19 +362,22 @@
         </div>
     @endif
 
-    <script>
-        document.addEventListener('livewire:initialized', function () {
-            if (!window.Echo || typeof window.Echo.channel !== 'function') {
-                return;
-            }
+    @script
+        <script>
+            if (window.Echo && typeof window.Echo.channel === 'function') {
+                const channel = window.Echo.channel('modules.dashboard');
 
-            window.Echo.channel('modules.dashboard')
-                .listen('.evaluation.received', function (event) {
-                    @this.call('onEvaluationReceived', event);
-                })
-                .listen('.ranking.order.altered', function (event) {
-                    @this.call('onRankingOrderAltered', event);
-                });
-        });
-    </script>
+                channel
+                    .listen('.evaluation.received', (event) => $wire.call('onEvaluationReceived', event))
+                    .listen('.ranking.order.altered', (event) => $wire.call('onRankingOrderAltered', event));
+
+                // Cada navegación con wire:navigate volvía a suscribirse sobre el
+                // mismo canal, multiplicando los renders por evento recibido.
+                document.addEventListener('livewire:navigating', () => {
+                    channel.stopListening('.evaluation.received')
+                           .stopListening('.ranking.order.altered');
+                }, { once: true });
+            }
+        </script>
+    @endscript
 </div>

@@ -22,7 +22,7 @@ Route::prefix('admin')->group(function () {
             return redirect()->intended(route('dashboard'));
         }
 
-        return redirect()->route('landing')->with('error', 'Invalid credentials');
+        return redirect()->route('admin.login')->with('error', 'Contraseña incorrecta.');
     });
 
     Route::middleware('admin.auth')->group(function () {

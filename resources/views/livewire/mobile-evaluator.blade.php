@@ -66,7 +66,18 @@
             role="radiogroup"
             aria-label="Calificación de la charla, de 1 a 5 corazones"
             class="flex justify-between items-center px-4"
-            x-data="{ hover: 0, popUntil: 0 }"
+            x-data="{
+                hover: 0,
+                popUntil: 0,
+                // Sin red: la calificación se guarda en el cliente y viaja con el
+                // envío, así una ráfaga de flechas no dispara una petición por tecla.
+                pick(value, group) {
+                    this.$wire.rating = value;
+                    this.popUntil = 0;
+                    this.$nextTick(() => this.popUntil = value);
+                    group?.querySelector(`[aria-label^='${value} ']`)?.focus();
+                },
+            }"
             @mouseleave="hover = 0"
         >
             <template x-for="i in 5" :key="i">
@@ -76,12 +87,16 @@
                     :aria-checked="$wire.rating === i"
                     :aria-label="`${i} de 5 corazones`"
                     :tabindex="($wire.rating || 1) === i ? 0 : -1"
-                    @click="$wire.set('rating', i); popUntil = 0; $nextTick(() => popUntil = i)"
-                    @keydown.arrow-right.prevent="$wire.set('rating', Math.min(($wire.rating || 0) + 1, 5)); $el.parentElement.querySelector(`[aria-label^='${Math.min(($wire.rating || 0), 5)} ']`)?.focus()"
-                    @keydown.arrow-left.prevent="$wire.set('rating', Math.max(($wire.rating || 1) - 1, 1)); $el.parentElement.querySelector(`[aria-label^='${Math.max(($wire.rating || 1), 1)} ']`)?.focus()"
+                    @click="pick(i)"
+                    @keydown.arrow-right.prevent="pick(Math.min(($wire.rating || 0) + 1, 5), $el.parentElement)"
+                    @keydown.arrow-down.prevent="pick(Math.min(($wire.rating || 0) + 1, 5), $el.parentElement)"
+                    @keydown.arrow-left.prevent="pick(Math.max(($wire.rating || 1) - 1, 1), $el.parentElement)"
+                    @keydown.arrow-up.prevent="pick(Math.max(($wire.rating || 1) - 1, 1), $el.parentElement)"
+                    @keydown.home.prevent="pick(1, $el.parentElement)"
+                    @keydown.end.prevent="pick(5, $el.parentElement)"
                     @mouseenter="hover = i"
                     class="w-14 h-14 rounded-full flex items-center justify-center transition-colors touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2"
-                    :class="(hover || $wire.rating) >= i ? 'text-brand-orange' : 'text-gray-400'"
+                    :class="(hover || $wire.rating) >= i ? 'text-brand-orange' : 'text-gray-500'"
                 >
                     <svg
                         aria-hidden="true"
@@ -203,18 +218,24 @@
                 this.$store.vorticeCache.loadQueue();
             },
 
+            onOnline: null,
+
             listenNetwork() {
-                const onOnline = () => {
+                this.onOnline = () => {
                     if (this.$store.vorticeCache.pendingQueue.length > 0) {
                         this.processQueue();
                     }
                 };
 
-                window.addEventListener('online', onOnline);
+                window.addEventListener('online', this.onOnline);
+            },
 
-                // Sin esto, cada navegación con wire:navigate deja un listener vivo
-                // y la cola se procesa varias veces en paralelo.
-                this.$cleanup(() => window.removeEventListener('online', onOnline));
+            // Sin esto, cada navegación con wire:navigate deja un listener vivo
+            // y la cola se procesa varias veces en paralelo.
+            destroy() {
+                if (this.onOnline) {
+                    window.removeEventListener('online', this.onOnline);
+                }
             },
 
             submitEvaluation() {
