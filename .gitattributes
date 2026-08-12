@@ -1,0 +1,4 @@
+* text=auto
+# Scripts de s6: CRLF rompe execlineb dentro del contenedor.
+docker/s6-rc.d/** text eol=lf
+Dockerfile text eol=lf
