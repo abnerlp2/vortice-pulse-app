@@ -3,10 +3,10 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-slate-200">
         <div class="flex items-center gap-4">
             <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-10 w-auto">
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard de Organización</h1>
+            <h1 class="text-3xl font-display text-brand-black tracking-tight">Dashboard de Organización</h1>
         </div>
         <div class="flex items-center gap-4">
-            <a href="{{ route('admin.setup') }}" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-xl shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors">
+            <a href="{{ route('admin.setup') }}" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-xl shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-brand-light transition-colors">
                 <svg class="w-4 h-4 mr-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 Importar Agenda
             </a>
@@ -58,18 +58,18 @@
                             <div>
                                 <p class="text-slate-400 uppercase tracking-widest text-xs font-semibold">
                                     {{ $talk['speaker'] }}
-                                    <span class="inline-block ml-2 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                    <span class="inline-block ml-2 px-2 py-0.5 rounded text-[10px] font-bold bg-brand-light text-slate-600 border border-slate-200">
                                         📍 {{ !empty($talk['room']) ? $talk['room'] : 'Por confirmar' }}
                                     </span>
                                 </p>
                                 <p class="text-xs text-slate-500 mt-1">{{ $talk['formatted_start_time'] }} - {{ $talk['formatted_end_time'] }}</p>
-                                <h3 class="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors mt-0.5">{{ $talk['title'] }}</h3>
+                                <h3 class="text-lg font-bold text-brand-black group-hover:text-sky-600 transition-colors mt-0.5">{{ $talk['title'] }}</h3>
                             </div>
                             <div class="flex items-center gap-2">
                                 <button 
                                     type="button"
                                     wire:click.stop="editTalk('{{ $talk['id'] }}')" 
-                                    class="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-700 border border-slate-200 transition-colors"
+                                    class="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-semibold bg-brand-light hover:bg-sky-100 text-slate-700 hover:text-sky-700 border border-slate-200 transition-colors"
                                     title="Editar Charla"
                                 >
                                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -79,13 +79,13 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="rounded-2xl bg-slate-50 p-3.5 border border-slate-100">
+                            <div class="rounded-2xl bg-brand-light p-3.5 border border-slate-100">
                                 <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Promedio Actual</p>
-                                <p class="text-2xl font-extrabold text-slate-900 mt-1">{{ $talkStats[$talk['id']]['average'] ?? '--' }}</p>
+                                <p class="text-2xl font-extrabold text-brand-black mt-1">{{ $talkStats[$talk['id']]['average'] ?? '--' }}</p>
                             </div>
-                            <div class="rounded-2xl bg-slate-50 p-3.5 border border-slate-100">
+                            <div class="rounded-2xl bg-brand-light p-3.5 border border-slate-100">
                                 <p class="text-xs text-slate-400 uppercase tracking-wider font-medium">Votos Totales</p>
-                                <p class="text-2xl font-extrabold text-slate-900 mt-1">{{ $talkStats[$talk['id']]['total_votes'] ?? '--' }}</p>
+                                <p class="text-2xl font-extrabold text-brand-black mt-1">{{ $talkStats[$talk['id']]['total_votes'] ?? '--' }}</p>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                 @if(count($podiumOrder) > 0)
                     <ol class="space-y-3">
                         @foreach($podiumOrder as $position => $talkId)
-                            <li class="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 text-slate-800">
+                            <li class="flex items-center gap-3 p-3 rounded-2xl bg-brand-light border border-slate-100 text-slate-800">
                                 <span class="flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold {{ $loop->first ? 'bg-amber-100 text-amber-800' : 'bg-slate-200 text-slate-700' }}">
                                     {{ $loop->iteration }}
                                 </span>
@@ -119,7 +119,7 @@
                     <p class="text-xs text-slate-400 uppercase tracking-wider font-medium mb-3">Preview Estático de Ponencias</p>
                     <div class="space-y-2">
                         @foreach($talks as $talk)
-                            <div class="rounded-2xl border border-slate-100 p-3 bg-slate-50 text-slate-700">
+                            <div class="rounded-2xl border border-slate-100 p-3 bg-brand-light text-slate-700">
                                 <p class="text-xs font-medium text-slate-400">{{ $talk['speaker'] }}</p>
                                 <p class="text-sm font-semibold text-slate-800 mt-0.5">{{ $talk['title'] }}</p>
                             </div>
@@ -148,7 +148,7 @@
                 x-transition:leave="ease-in-out duration-500"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="absolute inset-0 bg-slate-500 bg-opacity-75 transition-opacity" 
+                class="absolute inset-0 bg-brand-light0 bg-opacity-75 transition-opacity" 
                 @click="open = false" 
                 aria-hidden="true"
             ></div>
@@ -167,7 +167,7 @@
                     <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                         <div class="px-4 py-6 sm:px-6 border-b border-slate-100">
                             <div class="flex items-start justify-between">
-                                <h2 class="text-xl font-bold text-slate-900" id="slide-over-title">
+                                <h2 class="text-xl font-bold text-brand-black" id="slide-over-title">
                                     Feedback Cualitativo: {{ $talkTitles[$selectedTalkId] ?? '' }}
                                 </h2>
                                 <div class="ml-3 flex h-7 items-center">
@@ -236,7 +236,7 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0"
-                    class="fixed inset-0 bg-slate-500 bg-opacity-75 transition-opacity" 
+                    class="fixed inset-0 bg-brand-light0 bg-opacity-75 transition-opacity" 
                     wire:click="cancelEdit"
                 ></div>
 
@@ -253,7 +253,7 @@
                     <form wire:submit.prevent="updateTalk">
                         <div class="bg-white px-6 pt-6 pb-4">
                             <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                                <h3 class="text-xl font-bold text-slate-900">Editar Charla</h3>
+                                <h3 class="text-xl font-bold text-brand-black">Editar Charla</h3>
                                 <button type="button" wire:click="cancelEdit" class="text-slate-400 hover:text-slate-500 rounded-xl p-1">
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                 </button>
@@ -266,7 +266,7 @@
                                         type="text" 
                                         id="editTitle" 
                                         wire:model="editTitle" 
-                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTitle') border-rose-500 @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTitle') border-rose-500 @enderror"
                                         placeholder="Ingrese el título"
                                     >
                                     @error('editTitle')
@@ -280,7 +280,7 @@
                                         type="text" 
                                         id="editSpeaker" 
                                         wire:model="editSpeaker" 
-                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editSpeaker') border-rose-500 @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editSpeaker') border-rose-500 @enderror"
                                         placeholder="Nombre del conferencista"
                                     >
                                     @error('editSpeaker')
@@ -294,7 +294,7 @@
                                         type="text" 
                                         id="editRoom" 
                                         wire:model="editRoom" 
-                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editRoom') border-rose-500 @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editRoom') border-rose-500 @enderror"
                                         placeholder="Ej. Auditorio Principal, Sala A"
                                     >
                                     @error('editRoom')
@@ -307,7 +307,7 @@
                                     <select 
                                         id="editTimeBlockId" 
                                         wire:model="editTimeBlockId" 
-                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-slate-900 shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTimeBlockId') border-rose-500 @enderror"
+                                        class="mt-1 block w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-brand-black shadow-sm focus:border-sky-500 focus:ring-sky-500 text-sm @error('editTimeBlockId') border-rose-500 @enderror"
                                     >
                                         <option value="">Seleccione un bloque</option>
                                         @foreach($availableTimeBlocks as $block)
@@ -323,11 +323,11 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-50 px-6 py-4 flex items-center justify-end gap-3 border-t border-slate-100 rounded-b-2xl">
+                        <div class="bg-brand-light px-6 py-4 flex items-center justify-end gap-3 border-t border-slate-100 rounded-b-2xl">
                             <button 
                                 type="button" 
                                 wire:click="cancelEdit" 
-                                class="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+                                class="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-brand-light transition-colors"
                             >
                                 Cancelar
                             </button>

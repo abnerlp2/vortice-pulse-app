@@ -6,12 +6,12 @@
                     <img src="{{ asset('images/vortice-logo.svg') }}" class="h-8 w-auto">
                 </div>
                 <div>
-                    <p class="text-2xl font-bold tracking-tight text-indigo-400">Ranking de Ponencias en Tiempo Real</p>
+                    <p class="text-2xl font-display tracking-tight text-brand-cyan">Ranking de Ponencias en Tiempo Real</p>
                 </div>
             </div>
             <div class="text-right">
                 <div class="text-sm font-mono text-gray-500 uppercase tracking-widest">Estado del Evento</div>
-                <div class="flex items-center justify-end text-green-400 font-bold">
+                <div class="flex items-center justify-end text-brand-cyan font-bold">
                     <span class="relative flex h-3 w-3 mr-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
@@ -32,7 +32,7 @@
                 <div class="relative bg-gray-800 rounded-2xl p-6 flex items-center transition-all duration-500 transform border border-gray-700 shadow-2xl"
                      style="order: {{ $index }};">
                     
-                    <div class="flex-shrink-0 w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-3xl font-black text-indigo-300 mr-8">
+                    <div class="flex-shrink-0 w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-3xl font-black text-brand-purple mr-8">
                         {{ $rank }}
                     </div>
 
@@ -48,7 +48,7 @@
                     <div class="flex items-center space-x-12">
                         <div class="text-center">
                             <div class="text-sm text-gray-500 uppercase tracking-wider mb-1">Puntaje</div>
-                            <div class="text-5xl font-black text-indigo-400">
+                            <div class="text-5xl font-black text-brand-purple">
                                 {{ number_format($stats['average'], 1) }}
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                     </div>
 
                     @if($rank <= 3)
-                        <div class="absolute -top-2 -right-2 bg-yellow-500 text-gray-900 text-xs font-black px-3 py-1 rounded-full uppercase">
+                        <div class="absolute -top-2 -right-2 bg-yellow-500 text-brand-black text-xs font-black px-3 py-1 rounded-full uppercase">
                             Top {{ $rank }}
                         </div>
                     @endif

@@ -1,5 +1,104 @@
 @import "tailwindcss";
 
+/* Paleta y tipografías de Ágiles Colombia / Vórtice (espejo de site/src/index.css). */
+@theme {
+    --color-brand-cyan: #00c1c1;
+    --color-brand-purple: #ad00ed;
+    --color-brand-orange: #ff4500;
+    --color-brand-blue: #273cff;
+    --color-brand-black: #141414;
+    --color-brand-light: #f2f2f2;
+    --color-brand-card: #ffffff;
+
+    --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Audiowide", ui-sans-serif, cursive;
+}
+
+/* ========================================
+   BOTONES (mismas variantes que el sitio)
+   ======================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn:focus-visible {
+    outline: 2px solid var(--color-brand-cyan);
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.btn-lg {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.75rem;
+}
+
+.btn-md {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: var(--color-brand-cyan);
+    color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.btn-primary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(0, 193, 193, 0.3);
+}
+
+.btn-purple {
+    background-color: var(--color-brand-purple);
+    color: #ffffff;
+}
+
+.btn-purple:hover:not(:disabled) {
+    background-color: #7c3aed;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: var(--color-brand-black);
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #f9fafb;
+}
+
 /* Corazones del evaluador: rebote en cascada al calificar. */
 @keyframes heart-pop {
     0%   { transform: scale(1); }

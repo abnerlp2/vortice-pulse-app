@@ -1,11 +1,11 @@
-<div class="max-w-md mx-auto min-h-screen bg-gray-50 shadow-sm flex flex-col">
+<div class="max-w-md mx-auto min-h-screen bg-brand-light shadow-sm flex flex-col">
     <header class="sticky top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm py-3 px-4 flex justify-center items-center">
         <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" class="h-8 w-auto">
     </header>
 
     <main class="flex-grow p-4 w-full">
         @if(session('error'))
-            <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <div class="mb-4 p-4 bg-brand-orange/10 border-l-4 border-brand-orange text-brand-orange">
                 {{ session('error') }}
             </div>
         @endif
@@ -27,18 +27,18 @@
             <div class="space-y-4">
                 @foreach($talks as $talk)
                     <a href="{{ route('talk.show', $talk->id) }}" 
-                       class="block bg-white p-4 rounded-2xl shadow border border-gray-200 active:bg-gray-100 transition-colors"
+                       class="block bg-white p-4 rounded-2xl shadow border border-gray-200 active:bg-brand-light transition-colors"
                        style="min-height: 80px;">
                         <div class="flex justify-between items-center h-full">
                             <div>
-                                <h3 class="font-bold text-gray-900">{{ $talk->title }}</h3>
+                                <h3 class="font-bold text-brand-black">{{ $talk->title }}</h3>
                                 <p class="text-sm text-gray-600">{{ $talk->speaker }}</p>
                                 <p class="text-xs text-gray-500 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
-                                <span class="inline-block mt-2 text-xs font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">
+                                <span class="inline-block mt-2 text-xs font-medium text-brand-purple bg-brand-purple/10 px-2 py-0.5 rounded-md">
                                     📍 {{ $talk->room ?: 'Por confirmar' }}
                                 </span>
                             </div>
-                            <div class="flex items-center justify-center w-11 h-11 bg-indigo-50 rounded-full text-indigo-600">
+                            <div class="flex items-center justify-center w-11 h-11 bg-brand-purple/10 rounded-full text-brand-purple">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                 </svg>
@@ -49,12 +49,12 @@
             </div>
         @else
             <div class="flex flex-col items-center justify-center h-64 text-center">
-                <div class="bg-gray-100 p-6 rounded-full mb-4">
+                <div class="bg-brand-light p-6 rounded-full mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h2 class="text-xl font-medium text-gray-900">No hay charlas activas en este momento</h2>
+                <h2 class="text-xl font-medium text-brand-black">No hay charlas activas en este momento</h2>
                 <p class="text-gray-500 mt-2">Vuelve a escanear el código cuando inicie la siguiente ponencia.</p>
             </div>
         @endif
