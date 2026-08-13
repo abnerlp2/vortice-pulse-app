@@ -139,7 +139,7 @@ class TalkRoomInfoTest extends TestCase
         Livewire::test(PublicLeaderboard::class)
             ->assertSee('Charla Leaderboard')
             ->assertSee('Speaker D')
-            ->assertSee('Sala VIP');
+            ->assertSee('Ranking de charlas en tiempo real');
     }
 
     public function test_admin_dashboard_displays_edits_room_info()

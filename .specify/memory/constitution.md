@@ -49,4 +49,6 @@ Queda estrictamente prohibido incluir comentarios explicativos, justificaciones 
 *   **2026-07-27**: Se relaja la restricción "CLI Interface" y "Mobile-First" exclusivamente para el módulo de administración (`/admin`), permitiendo la creación de una GUI en formato Desktop para la importación visual de Excel y el drill-down cualitativo. Se autoriza el uso de un mecanismo de protección básico (Auth) para esta ruta.
 *   **2026-08-05**: Se erradica por completo la funcionalidad de generación y acceso mediante códigos QR físicos ("YAGNI"). El enrutamiento de los asistentes dependerá exclusivamente de la URL raíz pública y la selección visual. Queda prohibida la instalación de dependencias externas para generación de códigos QR.
 
-**Version**: 1.3.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-08-05
+* **2026-08-12**: Se amplía la ventana estricta de evaluación de 10 a 30 minutos. En la interfaz principal, las charlas deben ordenarse mostrando primero las que están activas en tiempo real, seguidas por las que acaban de finalizar y se encuentran en sus 30 minutos de gracia.
+
+**Version**: 1.4.0 | **Ratified**: 2026-07-16 | **Last Amended**: 2026-08-12

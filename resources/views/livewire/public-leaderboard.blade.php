@@ -5,7 +5,7 @@
                 <div class="bg-white/95 px-4 py-2 rounded-2xl shadow-md inline-block">
                     <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" width="140" height="32" class="h-8 lg:h-10 w-auto">
                 </div>
-                <h1 class="text-2xl lg:text-3xl 2xl:text-4xl font-display tracking-tight text-brand-cyan">Ranking de Ponencias en Tiempo Real</h1>
+                <h1 class="text-2xl lg:text-3xl 2xl:text-4xl font-display tracking-tight text-brand-cyan">Ranking de charlas en tiempo real</h1>
             </div>
             <div class="text-right">
                 <p class="text-sm font-mono text-brand-mute uppercase tracking-widest">Estado del Evento</p>
@@ -43,7 +43,7 @@
 
                     <div class="flex items-center gap-10 lg:gap-12 md:flex-shrink-0">
                         <div class="text-center">
-                            <p class="text-sm text-brand-mute uppercase tracking-wider mb-1">Puntaje</p>
+                            <p class="text-sm text-brand-mute uppercase tracking-wider mb-1">Promedio</p>
                             <p class="text-4xl lg:text-5xl 2xl:text-6xl font-black text-brand-cyan tabular-nums">
                                 {{ number_format($stats['average'], 1) }}
                             </p>

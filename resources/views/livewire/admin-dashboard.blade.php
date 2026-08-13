@@ -3,12 +3,12 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-6 border-b border-gray-200">
         <div class="flex items-center gap-4">
             <img src="{{ asset('images/vortice-logo.svg') }}" alt="Vórtice 2026" width="175" height="40" class="h-10 w-auto">
-            <h1 class="text-3xl font-display text-brand-black tracking-tight">Dashboard de Organización</h1>
+            <h1 class="text-3xl font-display text-brand-black tracking-tight">Dashboard de organización</h1>
         </div>
         <div class="flex items-center gap-4">
             <a href="{{ route('admin.setup') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-xl shadow-sm text-sm font-medium text-brand-black bg-white hover:bg-brand-light transition-colors">
                 <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                Importar Agenda
+                Importar agenda
             </a>
             <div class="rounded-2xl bg-white px-4 py-2 shadow-sm border border-gray-200 flex items-center gap-3">
                 <div>
@@ -44,7 +44,7 @@
         <!-- Area Principal: Tarjetas de Ponencias -->
         <div class="col-span-12 lg:col-span-8 space-y-6">
             <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold text-brand-black">Ponencias en Evaluación</h2>
+                <h2 class="text-xl font-bold text-brand-black">Lista de charlas</h2>
                 <span class="text-xs text-gray-600">Haz clic en una tarjeta para explorar feedback cualitativo</span>
             </div>
 
@@ -86,11 +86,11 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div class="rounded-2xl bg-brand-light p-3.5 border border-gray-100">
-                                <p class="text-xs text-gray-600 uppercase tracking-wider font-medium">Promedio Actual</p>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-medium">Promedio actual</p>
                                 <p class="text-2xl font-extrabold text-brand-black mt-1">{{ $talkStats[$talk['id']]['average'] ?? '--' }}</p>
                             </div>
                             <div class="rounded-2xl bg-brand-light p-3.5 border border-gray-100">
-                                <p class="text-xs text-gray-600 uppercase tracking-wider font-medium">Votos Totales</p>
+                                <p class="text-xs text-gray-600 uppercase tracking-wider font-medium">Votos totales</p>
                                 <p class="text-2xl font-extrabold text-brand-black mt-1">{{ $talkStats[$talk['id']]['total_votes'] ?? '--' }}</p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
         <div class="col-span-12 lg:col-span-4 space-y-6">
             <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sticky top-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-bold text-brand-black">Orden actual del Podio</h3>
+                    <h3 class="text-lg font-bold text-brand-black">Orden actual del podio</h3>
                     <span class="flex h-2.5 w-2.5 relative">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-cyan/100"></span>
@@ -122,7 +122,7 @@
                         @endforeach
                     </ol>
                 @else
-                    <p class="text-xs text-gray-600 uppercase tracking-wider font-medium mb-3">Preview Estático de Ponencias</p>
+                    <p class="text-xs text-gray-600 uppercase tracking-wider font-medium mb-3">Preview estático de charlas</p>
                     <div class="space-y-2">
                         @foreach($talks as $talk)
                             <div wire:key="preview-{{ $talk['id'] }}" class="rounded-2xl border border-gray-100 p-3 bg-brand-light text-brand-black">
@@ -176,7 +176,7 @@
                         <div class="px-4 py-6 sm:px-6 border-b border-gray-100">
                             <div class="flex items-start justify-between">
                                 <h2 class="text-xl font-bold text-brand-black" id="slide-over-title">
-                                    Feedback Cualitativo: {{ $talkTitles[$selectedTalkId] ?? '' }}
+                                    Feedback cualitativo: {{ $talkTitles[$selectedTalkId] ?? '' }}
                                 </h2>
                                 <div class="ml-3 flex h-7 items-center">
                                     <button @click="open = false" class="rounded-xl bg-white text-gray-600 hover:text-brand-black focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
@@ -194,7 +194,7 @@
                                 <div class="space-y-4">
                                     <h3 class="text-sm font-bold text-brand-cyan-ink uppercase tracking-wider flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.757c1.246 0 2.256 1.01 2.256 2.256 0 1.246-1.01 2.256-2.256 2.256H19.5m-5.5 0V8.25M6.75 19.5h6.75M6.75 4.5h6.75M6.75 4.5v15m0-15H4.5A2.25 2.25 0 002.25 6.75v10.5A2.25 2.25 0 004.5 19.5h2.25m0-15v15"></path></svg>
-                                        Puntos Fuertes
+                                        Puntos fuertes
                                     </h3>
                                     @forelse($qualitativeComments['liked'] as $comment)
                                         <div class="p-3 bg-brand-cyan/10 rounded-xl border border-brand-cyan/30 text-sm text-brand-cyan-ink italic shadow-sm">
@@ -209,7 +209,7 @@
                                 <div class="space-y-4">
                                     <h3 class="text-sm font-bold text-brand-orange-ink uppercase tracking-wider flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                        Oportunidades de Mejora
+                                        Oportunidades de mejora
                                     </h3>
                                     @forelse($qualitativeComments['improvement'] as $comment)
                                         <div class="p-3 bg-brand-orange/10 rounded-xl border border-brand-orange/40 text-sm text-brand-orange-ink italic shadow-sm">
@@ -274,7 +274,7 @@
 
                             <div class="mt-4 space-y-4">
                                 <div>
-                                    <label for="editTitle" class="block text-sm font-semibold text-brand-black">Título de la Charla</label>
+                                    <label for="editTitle" class="block text-sm font-semibold text-brand-black">Título de la charla</label>
                                     <input 
                                         type="text" 
                                         id="editTitle" 
@@ -316,7 +316,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="editTimeBlockId" class="block text-sm font-semibold text-brand-black">Bloque Horario</label>
+                                    <label for="editTimeBlockId" class="block text-sm font-semibold text-brand-black">Bloque horario</label>
                                     <select 
                                         id="editTimeBlockId" 
                                         wire:model="editTimeBlockId" 
@@ -349,7 +349,7 @@
                                 wire:loading.attr="disabled"
                                 class="inline-flex items-center justify-center rounded-xl border border-transparent bg-brand-cyan px-4 py-2 text-sm font-bold text-brand-black shadow-sm hover:brightness-110 transition-colors disabled:opacity-50"
                             >
-                                <span wire:loading.remove wire:target="updateTalk">Guardar Cambios</span>
+                                <span wire:loading.remove wire:target="updateTalk">Guardar cambios</span>
                                 <span wire:loading wire:target="updateTalk" class="flex items-center gap-2">
                                     <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     Guardando...

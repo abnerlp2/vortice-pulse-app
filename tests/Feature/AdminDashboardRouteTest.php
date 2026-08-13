@@ -13,6 +13,6 @@ it('renders the admin dashboard at the /admin route when authenticated', functio
     $response = $this->get('/admin');
 
     $response->assertStatus(200);
-    $response->assertSee('Dashboard de Organización');
+    $response->assertSee('Dashboard de organización');
     $response->assertSee('vortice-logo.svg');
 });

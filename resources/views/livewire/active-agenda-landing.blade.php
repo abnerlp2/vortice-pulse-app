@@ -24,7 +24,7 @@
             </div>
 
             <div class="space-y-4">
-                @foreach($talks as $talk)
+                @foreach($activeTalks as $talk)
                     <a wire:key="talk-{{ $talk->id }}" href="{{ route('talk.show', $talk->id) }}" 
                        class="block bg-white p-4 rounded-2xl shadow border border-gray-200 active:bg-brand-light transition-colors"
                        >
@@ -46,6 +46,31 @@
                     </a>
                 @endforeach
             </div>
+            @if(! $recentlyFinishedTalks->isEmpty())
+                <div class="mt-8">
+                    <h3 class="text-sm font-semibold text-gray-700">Terminadas recientemente</h3>
+                    <div class="space-y-4 mt-3">
+                        @foreach($recentlyFinishedTalks as $talk)
+                            <a wire:key="recent-{{ $talk->id }}" href="{{ route('talk.show', $talk->id) }}" 
+                               class="block bg-white p-4 rounded-2xl shadow border border-gray-200 active:bg-brand-light transition-colors"
+                               >
+                                <div class="flex justify-between items-center h-full">
+                                    <div>
+                                        <h4 class="font-bold text-brand-black">{{ $talk->title }}</h4>
+                                        <p class="text-sm text-gray-600">{{ $talk->speaker }}</p>
+                                        <p class="text-xs text-gray-600 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
+                                    </div>
+                                    <div class="flex items-center justify-center w-11 h-11 bg-brand-purple/10 rounded-full text-brand-purple">
+                                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         @else
             <div class="flex flex-col items-center justify-center h-64 text-center">
                 <div class="bg-brand-light p-6 rounded-full mb-4">

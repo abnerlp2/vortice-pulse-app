@@ -26,7 +26,7 @@
                         <p class="font-medium">{{ $message }}</p>
                     </div>
                     <a href="{{ route('dashboard') }}" class="inline-flex items-center px-3 py-1.5 border border-brand-cyan text-xs font-semibold rounded-xl text-brand-cyan-ink hover:bg-brand-cyan/20 transition-colors">
-                        Volver al Dashboard &rarr;
+                        &larr; Volver al Dashboard
                     </a>
                 </div>
             @endif
@@ -81,7 +81,7 @@
                         wire:loading.attr="disabled"
                         class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-brand-purple hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple disabled:opacity-50"
                     >
-                        <span wire:loading.remove>Iniciar Importación</span>
+                        <span wire:loading.remove>Iniciar importación</span>
                         <span wire:loading class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
