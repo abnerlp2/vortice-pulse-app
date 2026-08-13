@@ -27,11 +27,11 @@ beforeEach(function () {
 
 it('renders the admin dashboard component successfully and with clean header', function () {
     Livewire::test(\App\Livewire\AdminDashboard::class)
-        ->assertStatus(200)
-        ->assertSee('Dashboard de Organización')
+    ->assertStatus(200)
+    ->assertSee('Dashboard de organización')
         ->assertDontSee('DESKTOP')
         ->assertSee('vortice-logo.svg')
-        ->assertSee('Promedio Actual')
+        ->assertSee('Promedio actual')
         ->assertSee($this->talk->formatted_start_time . ' - ' . $this->talk->formatted_end_time);
 });
 

@@ -148,13 +148,13 @@ it('renders back to agenda button on active rating view and success state', func
 
     // Active rating state
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
-        ->assertSee('Volver a la Agenda')
+    ->assertSee('Volver a la agenda')
         ->assertSee('/')
         // Success state
         ->set('rating', 5)
         ->set('deviceSignature', $signature)
         ->call('submitEvaluation')
-        ->assertSee('Volver a la Agenda')
+    ->assertSee('Volver a la agenda')
         ->assertSee('/');
 });
 
@@ -165,6 +165,6 @@ it('renders sticky header, textarea styles and mobile container constraints', fu
         ->assertSee('max-w-md');
 
     Livewire::test('mobile-evaluator', ['talkId' => $this->talk->id])
-        ->assertSee('Volver a la Agenda')
+        ->assertSee('Volver a la agenda')
         ->assertSee('rounded-xl p-3');
 });

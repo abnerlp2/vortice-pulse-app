@@ -51,7 +51,7 @@ test('renders the admin setup page at /admin/setup route when authenticated', fu
     $response = $this->get('/admin/setup');
 
     $response->assertStatus(200);
-    $response->assertSee('Configuración Inicial de Agenda');
+    $response->assertSee('Configuración inicial de agenda');
     $response->assertSee('Volver al Dashboard');
     $response->assertSee(route('dashboard'));
     $response->assertSee('vortice-logo.svg');

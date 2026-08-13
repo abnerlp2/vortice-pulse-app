@@ -25,11 +25,11 @@
         <div class="w-16 h-16 mx-auto bg-brand-cyan/15 rounded-full flex items-center justify-center">
             <svg aria-hidden="true" class="w-8 h-8 text-brand-cyan-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
         </div>
-        <h2 class="text-xl font-semibold text-brand-black">¡Gracias por tu evaluación!</h2>
+        <h2 class="text-xl font-semibold text-brand-black">¡Gracias por tu feedback!</h2>
         <p class="text-gray-600">Tu respuesta ha sido registrada exitosamente.</p>
         <div class="pt-4">
             <a href="/" class="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-6 py-3 bg-brand-black hover:brightness-125 text-white font-semibold rounded-xl transition shadow-md text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2">
-                ← Volver a la Agenda
+                ← Volver a la agenda
             </a>
         </div>
     </div>
@@ -38,12 +38,12 @@
     <div x-show="!$wire.hasSubmitted" x-cloak x-transition.opacity.duration.300ms class="w-full space-y-6">
         <div class="flex justify-start px-2">
             <a href="/" class="inline-flex items-center min-h-[44px] min-w-[44px] text-sm font-medium text-gray-600 hover:text-brand-black transition-colors">
-                ← Volver a la Agenda
+                ← Volver a la agenda
             </a>
         </div>
 
         <div class="text-center">
-            <h1 class="text-xl font-bold text-brand-black">{{ $talk?->title ?? 'Evaluar ponencia' }}</h1>
+            <h1 class="text-xl font-bold text-brand-black">{{ $talk?->title ?? 'Evaluar charla' }}</h1>
             @if(isset($talk) && $talk)
                 <p class="text-sm font-medium text-gray-600 mt-1">{{ $talk->speaker }}</p>
                 <p class="text-xs text-gray-600 mt-1">{{ $talk->formatted_start_time }} - {{ $talk->formatted_end_time }}</p>
@@ -149,7 +149,7 @@
                 wire:loading.attr="disabled"
                 :disabled="isSubmitting"
             >
-                <span wire:loading.remove x-text="isSubmitting ? 'Enviando...' : 'Enviar Valoración'"></span>
+                <span wire:loading.remove x-text="isSubmitting ? 'Enviando...' : 'Enviar feedback'"></span>
                 <span wire:loading>Enviando...</span>
             </button>
         </div>
